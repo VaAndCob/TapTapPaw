@@ -10,7 +10,7 @@ When you type on your keyboard, tiny paw taps animate on the screen.
 When you move your mouse, the character reacts playfully.
 Soft sound effects respond to clicks and keystrokes, making your workflow feel alive.
 
-Behind the cuteness is a real-time hardware bridge powered by an ESP32 display — streaming system stats, clock data, and media information directly from your computer.
+Behind the cuteness is a real-time hardware bridge powered by an [ESP32 2.8" purple capacitive touch screen](https://s.click.aliexpress.com/e/_c3uiGvqR) — streaming system stats, clock data, and media information directly from your computer.
 
 > TapTapPaw is not just a monitor. It’s a tiny animated desk buddy that reacts to you in real time.
 
