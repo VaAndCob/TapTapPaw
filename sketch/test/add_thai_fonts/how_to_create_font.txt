@@ -1,0 +1,141 @@
+step 1:
+goto https://lvgl.io/tools/fontconverter
+
+step 2:
+setup following image "setup_font.png" (load thai font)
+
+step 3:
+export ui_font_NotoSanThai16.c     into    src/ui/font
+export ui_font_NoToSanThai20.c     into    src/ui/font
+
+step 4:
+remove line -> .static_bitmap = 0, in .c files
+=======================================================
+
+ABOUT CREAT OTHER LINGO font
+Executive summary
+
+Unicode assigns contiguous blocks per writing system.
+LVGL requires you to explicitly include the blocks you want.
+
+You do NOT want “everything” — that will explode flash usage.
+
+Core ranges (most common UIs)
+Latin / English
+0x0020 – 0x007F   Basic Latin (ASCII)
+0x00A0 – 0x00FF   Latin-1 Supplement
+0x0100 – 0x017F   Latin Extended-A
+0x0180 – 0x024F   Latin Extended-B
+
+Southeast Asian languages
+Language	Unicode range
+Thai	0x0E00 – 0x0E7F
+Lao	0x0E80 – 0x0EFF
+Khmer	0x1780 – 0x17FF
+Myanmar	0x1000 – 0x109F
+
+✔ Thai is 0x0E00–0x0E7F exactly — no overlap.
+
+East Asian languages
+Chinese / Japanese / Korean (CJK)
+Script	Range
+CJK Unified Ideographs	0x4E00 – 0x9FFF
+CJK Extension A	0x3400 – 0x4DBF
+Hiragana (JP)	0x3040 – 0x309F
+Katakana (JP)	0x30A0 – 0x30FF
+Hangul Syllables (KR)	0xAC00 – 0xD7AF
+
+⚠ CJK fonts are massive — avoid unless absolutely required.
+
+South Asian languages
+Language	Range
+Devanagari (Hindi)	0x0900 – 0x097F
+Bengali	0x0980 – 0x09FF
+Gurmukhi	0x0A00 – 0x0A7F
+Tamil	0x0B80 – 0x0BFF
+Telugu	0x0C00 – 0x0C7F
+Kannada	0x0C80 – 0x0CFF
+Malayalam	0x0D00 – 0x0D7F
+Sinhala	0x0D80 – 0x0DFF
+Middle Eastern languages
+Language	Range
+Arabic	0x0600 – 0x06FF
+Arabic Supplement	0x0750 – 0x077F
+Hebrew	0x0590 – 0x05FF
+Cyrillic (Russian, Ukrainian, etc.)
+0x0400 – 0x04FF   Cyrillic
+0x0500 – 0x052F   Cyrillic Supplement
+
+Symbols & UI essentials (recommended)
+Purpose	Range
+General punctuation	0x2000 – 0x206F
+Arrows	0x2190 – 0x21FF
+Math symbols	0x2200 – 0x22FF
+Misc symbols	0x2600 – 0x26FF
+Dingbats	0x2700 – 0x27BF
+Currency symbols	0x20A0 – 0x20CF
+
+Example:
+
+฿ € $ ° → ← ✓ ✕
+
+Emoji (⚠ usually NOT recommended for LVGL)
+0x1F300 – 0x1FAD6
+
+
+❌ Huge
+❌ Needs color font support
+❌ Eats PSRAM + CPU
+✔ Use bitmap icons instead
+
+Practical LVGL font ranges (real-world examples)
+English + Thai UI (recommended)
+0x20-0x7F, 0x0E00-0x0E7F
+
+English + Thai + Symbols
+0x20-0x7F, 0x0E00-0x0E7F, 0x2000-0x206F, 0x2190-0x21FF
+
+English + Chinese (minimal)
+0x20-0x7F, 0x4E00-0x9FFF
+
+
+⚠ Expect hundreds of KB.
+
+Strategic advice (important)
+
+Never generate “all Unicode”
+
+Always:
+
+Identify languages
+
+Add only required blocks
+
+Prefer one font size
+
+Enable BPP=4
+
+For ESP32:
+
+Thai = OK
+
+Arabic = OK
+
+CJK = heavy, plan PSRAM
+
+Bottom line
+
+✔ Unicode is block-based
+✔ Thai = 0x0E00–0x0E7F
+✔ LVGL needs explicit ranges
+✔ Smaller range = faster + safer UI
+
+If you want, I can:
+
+Generate a custom minimal Unicode list based on your actual strings
+
+Recommend best embedded fonts per language
+
+Optimize flash usage without breaking shaping
+
+Just say the word.

@@ -1,0 +1,10 @@
+BasedOnStyle: LLVM
+IndentWidth: 2
+ColumnLimit: 300
+BreakBeforeBraces: Attach
+AlignTrailingComments: false
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortCaseLabelsOnASingleLine: true
+

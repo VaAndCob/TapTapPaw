@@ -1,0 +1,63 @@
+{
+  "name": "TapTapPaw",
+  "version": "1.0.0",
+  "main": "main/main.js",
+  "description": "TapTapPaw desktop application",
+  "author": "Va&Cob",
+  "license": "ISC",
+  "scripts": {
+    "test": "node main/dev-run.js",
+    "dev": "electron .",
+    "rebuild": "electron-rebuild",
+    "postinstall": "electron-rebuild",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0",
+    "serialport": "^13.0.0",
+    "systeminformation": "^5.31.1",
+    "uiohook-napi": "^1.5.4"
+  },
+  "optionalDependencies": {
+    "iohook-macos": "^1.2.1"
+  },
+  "devDependencies": {
+    "electron": "^36.6.1",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.taptappaw.app",
+    "productName": "TapTapPaw",
+    "files": [
+      "main/**/*",
+      "core/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "**/node_modules/uiohook-napi/**/*",
+      "**/node_modules/serialport/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "icon.icns",
+      "category": "public.app-category.utilities",
+      "identity": null
+    },
+     "extraResources": [
+    {
+      "from": "resources/MediaBridge.exe",
+      "to": "MediaBridge.exe"
+    }
+  ]
+  }
+}

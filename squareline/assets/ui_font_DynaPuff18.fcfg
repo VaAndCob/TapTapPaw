@@ -1,0 +1,16 @@
+{
+  "codename": "DynaPuff18",
+  "ttf_path": "/assets/DynaPuff-VariableFont_wdth,wght.ttf",
+  "bin_path": "/assets/ui_font_DynaPuff18.bin",
+  "c_path": "/assets/ui_font_DynaPuff18.c",
+  "cfg_path": "/assets/ui_font_DynaPuff18.fcfg",
+  "size": 18,
+  "bpp": 4,
+  "letters": 0,
+  "ranges": [
+    "0x20-0x7f"
+  ],
+  "symbols": "",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}

@@ -1,0 +1,16 @@
+{
+  "codename": "itim16",
+  "ttf_path": "/assets/Itim-Regular.ttf",
+  "bin_path": "/assets/ui_font_itim16.bin",
+  "c_path": "/assets/ui_font_itim16.c",
+  "cfg_path": "/assets/ui_font_itim16.fcfg",
+  "size": 16,
+  "bpp": 2,
+  "letters": 0,
+  "ranges": [
+    "0x20-0x7F"
+  ],
+  "symbols": "",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}

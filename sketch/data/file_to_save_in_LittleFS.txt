@@ -1,0 +1,439 @@
+P0008	Engine position system performance bank 1
+P000F	Fuel system over pressure relief valve activated
+P0016	Crankshaft/camshaft timing misalignment – bank 1 sensor 1
+P0030	O2 sensor 1/1 heater circuit open
+P0031	O2 sensor 1/1 heater circuit low
+P0032	O2 sensor 1/1 heater circuit high
+P0036	O2 sensor 1/2 heater circuit open
+P0037	O2 sensor 1/2 heater circuit low
+P0038	O2 sensor 1/2 heater circuit high
+P003A	Turbocharger boost control module position exceeded learning limit
+P0046	Turbocharger boost control circuit performance
+P0049	Turbocharger turbine overspeed
+P0053	O2 sensor 1/1 heater resistance
+P0054	O2 sensor 1/2 heater resistance
+P006E	Turbocharger boost control module supply voltage circuit low
+P006F	Turbocharger boost control supply voltage circuit high
+P0071	Ambient air temperature sensor performance
+P0072	Ambient air temperature sensor circuit low
+P0073	Ambient air temperature sensor circuit high
+P007B	Charge air cooler temperature sensor circuit performance
+P007C	Charge air cooler temperature sensor circuit low
+P007D	Charge air cooler temperature sensor circuit high
+P007E	Charge air cooler temperature sensor circuit intermittent/erratic
+P0087	Fuel rail pressure too low
+P0088	Fuel rail pressure too high
+P00AF	Turbocharger boost control module performance
+P0101	Mass air flow sensor "a" circuit performance
+P0102	Mass air flow sensor "a" circuit low
+P0103	Mass air flow sensor "a" circuit high
+P0103	Mass air flow sensor "a" circuit high
+P0106	Manifold absolute pressure sensor performance
+P0107	Manifold absolute pressure sensor circuit low
+P0108	Manifold absolute pressure sensor circuit high
+P0111	Intake air temperature sensor 1 performance
+P0112	Intake air temperature sensor 1 circuit low
+P0113	Intake air temperature sensor 1 circuit high
+P0116	Engine coolant temperature sensor performance
+P0117	Engine coolant temperature sensor circuit low
+P0118	Engine coolant temperature sensor circuit high
+P0128	Thermostat rationality
+P0131	O2 sensor 1/1 circuit low
+P0135	O2 sensor 1/1 heater performance
+P0137	O2 sensor 1/2 circuit low
+P0138	O2 sensor 1/2 circuit high
+P013A	O2 sensor 1/2 slow response – rich to lean
+P013B	O2 sensor 1/2 slow response – lean to rich
+P0141	O2 sensor 1/2 heater performance
+P0148	Fuel delivery error
+P014C	O2 sensor 1/1 slow response – rich to lean
+P014D	O2 sensor 1/1 slow response – lean to rich
+P0169	Water in fuel detected for too long
+P0191	Fuel rail pressure sensor circuit performance
+P0192	Fuel pressure sensor low
+P0193	Fuel pressure sensor high
+P0201	Fuel injector 1 circuit/open
+P0202	Fuel injector 2 circuit/open
+P0203	Fuel injector 3 circuit/open
+P0204	Fuel injector 4 circuit/open
+P0205	Fuel injector 5 circuit/open
+P0206	Fuel injector 6 circuit/open
+P020A	Fuel injector 1 performance
+P020B	Fuel injector 2 performance
+P020C	Fuel injector 3 performance
+P020D	Fuel injector 4 performance
+P020E	Fuel injector 5 performance
+P020F	Fuel injector 6 performance
+P0216	- injection timing control circuit malfunction
+P2016	- intake manifold runner position sensor/switch circuit low bank 1
+P0217	Coolant temperature too high
+P0218	High temperature operation activated
+P0219	Engine overspeed
+P0251	Injection pump fuel valve feedback
+P0253	Injection pump fuel control circuit low
+P0254	Injection pump fuel control circuit high
+P0255	Injection pump fuel control circuit performance
+P026A	Charge air cooler efficiency below threshold
+P0299	Manifold pressure sensor out of range low
+P02E1	Diesel intake air flow control performance
+P02E2	Diesel intake air flow control circuit low
+P02E3	Diesel intake air flow control circuit high
+P02E7	Diesel intake air flow position sensor performance
+P02E8	Diesel intake air flow position sensor circuit low
+P02E9	Diesel intake air flow position sensor circuit high
+P0300	Multiple cylinder misfire
+P0301	Cylinder 1 misfire
+P0302	Cylinder 2 misfire
+P0303	Cylinder 3 misfire
+P0304	Cylinder 4 misfire
+P0305	Cylinder 5 misfire
+P0306	Cylinder 6 misfire
+P0335	Crankshaft position sensor circuit
+P0336	Crankshaft position sensor performance
+P0340	Camshaft position sensor circuit – bank 1 sensor 1
+P0341	Camshaft position sensor performance – bank 1 sensor 1
+P0381	Wait to start lamp inoperative
+P0400	EGR system flow malfunction
+P0401	EGR system performance
+P0402	EGR flow excessive detected
+P0403	EGR control circuit/open
+P0404	EGR position sensor performance
+P0405	EGR position sensor circuit low
+P040B	Exhaust gas recirculation temperature sensor 1 circuit performance
+P040C	Exhaust gas recirculation temperature sensor 1 circuit low
+P040D	Exhaust gas recirculation temperature sensor 1 circuit high
+P0420	Catalyst efficiency bank 1
+P042E	Exhaust gas recirculation control stuck open
+P0461	Fuel level sensor 1 performance
+P0462	Fuel level sensor 1 circuit low
+P0463	Fuel level sensor 1 circuit high
+P046C	EGR position sensor performance
+P0471	Exhaust pressure sensor 1 performance
+P0472	Exhaust pressure sensor 1 low
+P0473	Exhaust pressure sensor 1 high
+P0480	Cooling fan 1 control circuit/open
+P0483	Cooling fan speed
+P0487	EGR airflow throttle control circuit a open
+P0488	EGR airflow throttle control circuit performance
+P0489	EGR control circuit low
+P049D	EGR control position exceeded learning limit
+P04DB	Crankcase ventilation system disconnected
+P0501	Vehicle speed sensor 1 performance
+P0505	Engine speed at idle – data erratic, intermittent or incorrect
+P0507	Idle control system RPM – higher than expected
+P0513	Invalid skim/win key
+P0514	Battery temperature sensor performance
+P0516	Battery temperature sensor circuit low
+P0517	Battery temperature sensor circuit high
+P051B	Crankcase pressure sensor circuit range/performance
+P051C	Crankcase pressure sensor circuit low
+P051D	Crankcase pressure sensor circuit high
+P0521	Engine oil pressure sensor performance
+P0524	Engine oil pressure sensor circuit low
+P0532	A/c pressure sensor circuit low
+P0533	A/c pressure sensor circuit high
+P0541	Intake air heater control circuit 1 low
+P0542	Intake air heater control circuit 1 high
+P0545	Exhaust gas temperature sensor circuit low – bank 1 sensor 1
+P0546	Exhaust gas temperature sensor circuit high – bank 1 sensor 1
+P0560	Battery system voltage
+P0562	Battery voltage low
+P0563	Battery voltage high
+P0571	Brake switch 1 performance
+P0572	Brake switch 1 stuck on
+P0573	Brake switch 1 stuck off
+P0580	Speed control switch 1 circuit low
+P0581	Speed control switch 1 circuit high
+P0585	Speed control switch 1/2 correlation
+P0592	Speed control switch 2 circuit low
+P0593	Speed control switch 2 circuit high
+P0601	Internal memory checksum error / invalid
+P0602	Control module programming error/not programmed
+P0604	Internal control module ram error
+P0605	Internal control module rom
+P0606	Internal control processor
+P0607	ECU internal performance
+P0613	Internal TCM
+P0615	Starter control circuit/open
+P061A	Etc level 2 torque performance
+P061C	Etc level 2 RPM performance
+P0622	Generator field control circuit/open
+P0625	Generator field control circuit low
+P0626	Generator field control circuit high
+P0627	Fuel pump control circuit
+P0628	Fuel pump control circuit low
+P0629	Fuel pump control circuit high
+P062C	Etc level 2 MPH performance
+P0630	VIN not programmed in PCM
+P0633	Skim secret key not stored in PCM
+P063C	Generator voltage sense low
+P063D	Generator voltage sense high
+P0642	Sensor reference voltage 1 circuit low
+P0643	Sensor reference voltage 1 circuit high
+P0646	A/c control circuit low
+P0647	A/c control circuit high
+P064C	Glow plug module internal performance
+P064D	O2 sensor module internal performance
+P0652	Sensor reference voltage 2 low
+P0653	Sensor reference voltage 2 high
+P065A	Generator system performance
+P0686	Power enable control circuit low
+P0691	Cooling fan 1 control circuit low
+P0692	Cooling fan 1 control circuit high
+P0693	Cooling fan 2 control circuit low
+P0694	Cooling fan 2 control circuit high
+P0698	Sensor reference voltage 3 circuit low
+P0699	Sensor reference voltage 3 circuit high
+P06A4	Sensor reference voltage 4 circuit low
+P06A5	Sensor reference voltage 4 circuit high
+P0700	Transmission control system (MIL request)
+P0702	Transmission control system electrical
+P0706	Transmission range sensor rationality
+P0707	Transmission range sensor circuit low
+P0708	Transmission range sensor circuit high
+P0711	Transmission temperature sensor 1 performance
+P0712	Transmission temperature sensor 1 low
+P0713	Transmission temperature sensor 1 high
+P0714	Transmission temperature sensor intermittent
+P0716	Input speed sensor 1 circuit performance
+P0717	Input speed sensor 1 circuit no signal
+P0721	Output speed sensor circuit performance
+P0722	Output speed sensor circuit no signal
+P0729	Gear ratio error in 6th
+P0730	Incorrect gear ratio
+P0731	Gear ratio error in 1st
+P0732	Gear ratio error in 2nd
+P0733	Gear ratio error in 3rd
+P0734	Gear ratio error in 4th
+P0735	Gear ratio error in 5th
+P0736	Gear ratio error in reverse
+P0740	TCC out of range
+P0745	Line pressure solenoid circuit
+P0746	Pressure control solenoid a performance
+P0748	Pressure control solenoid a circuit
+P0750	LR solenoid circuit
+P0751	Shift solenoid a performance
+P0755	2c solenoid circuit
+P0756	Shift solenoid b performance
+P0760	OD solenoid circuit
+P0761	Shift solenoid c performance
+P0765	UD solenoid circuit
+P0766	Shift solenoid d performance
+P0770	4c solenoid circuit
+P0776	Pressure control solenoid b performance
+P0778	Pressure control solenoid b circuit
+P0796	Pressure control solenoid c performance
+P0798	Pressure control solenoid c circuit
+P0838	Four wheel drive (4WD) switch circuit low
+P0839	Four wheel drive (4WD) switch circuit high
+P0841	LR pressure switch rationality
+P0845	2c hydraulic pressure test
+P0846	2c pressure switch rationality
+P0850	Park/neutral switch performance
+P0853	Overdrive / tow switch input circuit stuck
+P0854	Overdrive input switch circuit low
+P0868	Line pressure low
+P0869	Line pressure high
+P0870	OD hydraulic pressure test
+P0871	OD pressure switch rationality
+P0875	UD hydraulic pressure test
+P0876	UD pressure switch rationality
+P0882	TCM power input low
+P0883	TCM power input high
+P0884	Power up at speed
+P0890	Switched battery
+P0930	Btsi control circuit low
+P0931	Btsi control circuit high
+P0933	Hydraulic pressure sensor range/performance
+P0934	Line pressure sensor circuit low
+P0935	Line pressure sensor circuit high
+P0944	Loss of hydraulic pump prime
+P0952	Autostick input circuit low
+P0953	Autostick input circuit high
+P0957	Autostick circuit low (ERS)
+P0958	Autostick circuit high (ERS)
+P0973	Shift solenoid a control circuit low
+P0974	Shift solenoid a control circuit high
+P0976	Shift solenoid b control circuit low
+P0977	Shift solenoid b control circuit high
+P0979	Shift solenoid c control circuit low
+P0980	Shift solenoid c control circuit high
+P0982	Shift solenoid d control circuit low
+P0983	Shift solenoid d control circuit high
+P0987	4c hydraulic pressure test
+P0988	4c pressure switch rationality
+P1001	Ignition key off timer performance – too fast
+P1002	Ignition key off timer performance – too slow
+P1011	Fuel pump delivery pressure too low
+P1012	Fuel pump delivery pressure too high
+P1103	Dc to AC converter switch stuck
+P1109	O2 sensor 1/2 positive current control circuit open
+P1110	O2 sensor 1/2 return circuit open
+P1111	O2 sensor 1/2 signal circuit open
+P1123	Power take off system monitor control error
+P113C	O2 sensor power supply circuit performance
+P1191	Inlet air temperature sensor rational/performance
+P1192	Inlet air temperature sensor low
+P1193	Inlet air temperature sensor high
+P125A	Power enable control circuit low
+P125B	Power enable control circuit high
+P1272	A/c clutch control circuit 2 low
+P1273	A/c clutch control circuit 2 high
+P1274	A/c clutch control circuit 2 open
+P1275	A/c clutch control circuit 2 overcurrent
+P1277	Starter control circuit 2 low
+P1278	Starter control circuit 2 high
+P1279	Starter control circuit 2 open
+P127A	Starter control circuit 2 overcurrent
+P127C	Fuel pump control circuit 2 low
+P127D	Fuel pump control circuit 2 high
+P127E	Fuel pump control circuit 2 open
+P127F	Fuel pump control circuit 2 overcurrent
+P128B	TCM power control circuit 2 low
+P128B	TCM power control circuit 2 low
+P128B	TCM power control circuit 2 low
+P128B	TCM power control circuit 2 low
+P128C	TCM power control circuit 2 high
+P128C	TCM power control circuit 2 high
+P128C	TCM power control circuit 2 high
+P128C	TCM power control circuit 2 high
+P128D	TCM power control circuit 2 open
+P128D	TCM power control circuit 2 open
+P128D	TCM power control circuit 2 open
+P128D	TCM power control circuit 2 open
+P128E	TCM power control circuit 2 overcurrent
+P128E	TCM power control circuit 2 overcurrent
+P128E	TCM power control circuit 2 overcurrent
+P128E	TCM power control circuit 2 overcurrent
+P129C	Inverter control circuit high
+P129E	Inverter control circuit overcurrent
+P141A	Exhaust gas temperature sensor 1 and 2 signals swapped
+P144E	EGR cooler bypass status line circuit low
+P144F	EGR cooler bypass status line circuit high
+P1451	Diesel particulate filter system performance
+P1484	Catalyst overheat detection
+P1506	Crankcase depression regulator valve performance
+P1507	Crankcase filter restriction
+P1508	Crankcase filter restriction – replace filter
+P1679	Calibration not learned
+P1684	Battery was disconnected
+P1715	Restricted manual valve in t3 range
+P1720	Loss of output speed / wheel speed
+P1775	Solenoid switch valve latched in TCC position
+P1776	Solenoid switch valve latched in LR position
+P1794	Speed sensor ground error
+P2000	NOX absorber efficiency below threshold – bank 1
+P2002	Diesel particulate filter efficiency below threshold
+P200C	Diesel particulate filter over temperature – bank 1
+P200E	Catalyst system over temperature – bank 1
+P2032	Exhaust gas temperature sensor circuit low – bank 1 sensor 2
+P2033	Exhaust gas temperature sensor circuit high – bank 1 sensor 2
+P2080	Exhaust gas temp sensor circuit performance – bank 1 sensor 1
+P2084	Exhaust gas temp sensor circuit performance – bank 1 sensor 2
+P2121	Accelerator pedal position sensor 1 performance
+P2122	Accelerator pedal position sensor 1 circuit low
+P2123	Accelerator pedal position sensor 1 circuit high
+P2127	Accelerator pedal position sensor 2 circuit low
+P2128	Accelerator pedal position sensor 2 circuit high
+P2141	EGR airflow throttle control circuit low
+P2142	EGR airflow throttle control circuit high
+P2195	O2 sensor 1/1 out of range high
+P2196	O2 sensor 1/1 out of range low
+P21B2	Excessive time to enter closed loop NOX absorber control
+P21B3	Closed loop NOX absorber control at limit – too high
+P21B4	NOX absorber – over temperature
+P2227	Barometeric pressure sensor rationality
+P2228	Barometric pressure circuit low
+P2229	Barometric pressure circuit high
+P2237	O2 sensor 1/1 positive pumping circuit open
+P2243	O2 sensor 1/1 signal circuit below normal or open
+P2251	O2 sensor 1/1 return circuit open
+P2262	Turbocharger boost pressure not detected – mechanical
+P2266	Water in fuel sensor circuit low
+P2267	Water in fuel sensor circuit high
+P2269	Water in fuel condition
+P226B	Turbocharger boost pressure not responding
+P226C	Turbocharger boost control "a" slow response
+P2270	O2 sensor 1/2 out of range high
+P2271	O2 sensor 1/2 out of range low
+P2281	Air leak between MAF and throttle body
+P2299	Brake pedal position / accelerator pedal position incompatible
+P22B5	O2 sensor 1/2 pump cell current trim circuit open
+P2413	Exhaust gas recirculation system performance
+P241A	O2 sensor 1/1 and 1/2 oxygen concentration mismatch
+P242B	Exhaust gas temp sensor circuit performance – bank 1 sensor 3
+P242C	Exhaust gas temperature sensor circuit low, bank 1 sensor 3
+P242D	Exhaust gas temperature sensor circuit high – bank 1 sensor 3
+P242F	Diesel particulate filter restriction – ash accumulation
+P244A	Diesel particullate filter differential pressure too low
+P244D	Exhaust temperature too high for particulate filter regeneration – bank 1
+P2453	Diesel particulate filter pressure sensor a circuit performance
+P2454	Diesel particulate filter pressure sensor a circuit low
+P2455	Diesel particulate filter pressure sensor a circuit high
+P2457	Exhaust gas recirculation cooling system performance
+P2459	Diesel particulate filter regeneration too frequent
+P245A	EGR cooler bypass control circuit open
+P245B	EGR cooler bypass status line intermittent
+P245C	EGR cooler bypass control circuit low
+P245D	EGR cooler bypass control circuit high
+P2463	Diesel particulate filter – soot accumulation
+P246F	Exhaust gas temp sensor circuit performance – bank 1 sensor 4
+P2470	Exhaust gas temperature sensor circuit low – bank 1 sensor 4
+P2471	Exhaust gas temperature sensor circuit high – bank 1 sensor 4
+P249F	Excessive time to enter closed loop DPF regeneration control
+P24A0	Closed loop DPF regeneratiion control at limit – temperature too low
+P2503	Charging system output low
+P2504	Charging system output high
+P2509	Ecm/PCM power input signal intermittent
+P254C	Pto speed selector sensor circuit low
+P254D	Pto speed selector sensor circuit high
+P2563	Turbocharger boost control position sensor performance
+P2579	Turbocharger speed sensor circuit performance
+P2580	Turbocharger speed sensor circuit low
+P2609	Intake air heater system performance
+P2626	O2 sensor 1/1 pump cell current trim circuit open
+P268C	Cylinder 1 injector data incompatible
+P268D	Cylinder 2 injector data incompatible
+P268E	Cylinder 3 injector data incompatible
+P268F	Cylinder 4 injector data incompatible
+P2690	Cylinder 5 injector data incompatible
+P2691	Cylinder 6 injector data incompatible
+P2700	Inadequate element volume LR
+P2701	Inadequate element volume 2c
+P2702	Inadequate element volume OD
+P2703	Inadequate element volume UD
+P2704	Inadequate element volume 4c
+P2706	Ms solenoid circuit
+P2741	Transmission fluid temperature sensor 2 performance
+P2742	Transmission fluid temperature sensor 2 low
+P2743	Transmission fluid temperature sensor 2 high
+P2757	TCC pressure control solenoid control circuit performance
+P2806	Transmission range sensor alignment
+P2A00	O2 sensor 1/1 circuit performance
+P2A01	O2 sensor 1/2 circuit performance
+U0001	CAN c bus
+U0002	CAN c bus off performance
+U0100	Lost communication with ecm / PCM
+U0101	Lost communication with TCM
+U010C	Lost communication with turbocharger/supercharger control module
+U011A	Lost communication with exhaust gas sensor module
+U0121	Lost communication with anti-lock brake module
+U0141	Lost communication with fcm (tipm)
+U1111	Lost odometer message
+U1400	Implausible TPS signal received
+U1401	Implausible engine speed signal received
+U1402	Implausible engine temperature signal received
+U1403	Implausible fuel level signal received
+U1407	Implausible engine torque request received
+U1408	Implausible brake signal received
+U140D	Implausible wheel speed signals received
+U1412	Implausible vehicle speed signal received
+U1421	Implausible ignition key off time received
+U1424	Implausible engine torque received
+U1437	Implausible intake air temperature message received
+U1439	Implausible/missing programmed axle ratio
+U1440	Implausible/missing programmed transfer case hi ratio
+U1441	Implausible/missing programmed transfer case low ratio
+U1448	Implausible ignition off time received – signal stuck
+U1449	Implausible ERS message received
+U1601	ECU application software code 1 missing or corrupted
