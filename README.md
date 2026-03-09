@@ -10,7 +10,7 @@ When you type on your keyboard, tiny paw taps animate on the screen.
 When you move your mouse, the character reacts playfully.
 Soft sound effects respond to clicks and keystrokes, making your workflow feel alive.
 
-Behind the cuteness is a real-time hardware bridge powered by an [ESP32 2.8" purple capacitive touch screen](https://s.click.aliexpress.com/e/_c3uiGvqR) — streaming system stats, clock data, and media information directly from your computer.
+Behind the cuteness is a real-time hardware bridge, designed for boards like the recommended [ESP32 2.8" purple capacitive touch screen](https://s.click.aliexpress.com/e/_c3uiGvqR). It streams system stats, clock data, and media information directly from your computer.
 
 > TapTapPaw is not just a monitor. It’s a tiny animated desk buddy that reacts to you in real time.
 
@@ -36,6 +36,8 @@ TapTapPaw/
 
 ## 🖥️ Desktop Application (`app/`)
 The desktop app runs quietly in the system tray (Windows) or menu bar (macOS). It listens for global events and streams structured data to the ESP32 over USB serial.
+
+![](document/desktopapp.jpg)
 
 ### Capabilities
 * Global keyboard & mouse monitoring
@@ -84,6 +86,9 @@ npm run build:win   # Windows
 ## 🔌 ESP32 Firmware (`sketch/`)
 The firmware runs on an ESP32 and renders visuals using **LVGL**. It parses incoming binary packets and updates animations in real time.
 
+### Recommended Board [Buy Here](https://s.click.aliexpress.com/e/_c3uiGvqR)
+![](document/board.jpg)
+
 ### Firmware Setup
 1. Install **VS Code**
 2. Install the **PlatformIO IDE** extension
@@ -93,8 +98,6 @@ The firmware runs on an ESP32 and renders visuals using **LVGL**. It parses inco
 
 ### Quick start, flash and go, no code needed
 [Flash Firmware Online](https://vaandcob.github.io/webpage/src/index.html)
-
-
 
 ## 📡 Serial Protocol Overview
 Communication uses a lightweight binary protocol optimized for embedded devices.
@@ -147,6 +150,12 @@ TapTapPaw is designed to be:
 * Hardware-friendly
 * Cute but technically solid
 * Easy to extend (new widgets, new animals, new data sources)
+
+## 📦 3D Print Case
+
+This project includes a custom-designed 3D printable case. Its foldable style and adjustable tilt angle make it portable and easy to position on your desk.
+
+*(You can find the 3D files in the `3d print case/` directory. A link to Thingiverse/Printables will be added soon!)*
 
 ## 📜 License
 
