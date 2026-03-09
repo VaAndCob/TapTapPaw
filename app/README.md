@@ -84,5 +84,3 @@ The distributable files will be located in the `dist/` directory.
 -   @foobar404/windows-media-controller for Windows media status.
 
 ---
-
-*This README was generated based on your project's `package.json`. Feel free to edit and expand it!*
