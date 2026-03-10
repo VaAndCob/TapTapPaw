@@ -14,7 +14,7 @@ Behind the cuteness is a real-time hardware bridge, designed for boards like the
 
 > TapTapPaw is not just a monitor. It’s a tiny animated desk buddy that reacts to you in real time.
 
-![](document/screen.png)
+![](document/screen.jpg)
 ![](document/animation.gif)
 
 
