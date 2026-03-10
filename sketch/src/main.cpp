@@ -42,6 +42,8 @@ static uint8_t packetLength = 0;
 unsigned long connect_timer = 0;
 bool app_connected = false;
 bool last_connected_state = true;
+const lv_img_dsc_t weather_icon[5] = {ui_img_sun_png, ui_img_cloud_png, ui_img_rain_png, ui_img_storm_png, ui_img_snow_png};
+
 
 //-----------------------------------------
 
@@ -97,6 +99,9 @@ void serial_parse(byte b) {
       // Total length = data_length (packet[2]) + 3 header bytes
       packetLength = packet[2] + 3;
     } else if (packet[1] == 0x02) { // Music Packet
+      // Total length = data_length (packet[2]) + 3 header bytes
+      packetLength = packet[2] + 3;
+    } else if (packet[1] == 0x03) { // Weather Packet
       // Total length = data_length (packet[2]) + 3 header bytes
       packetLength = packet[2] + 3;
     }
@@ -179,6 +184,22 @@ void serial_parse(byte b) {
 
       // Update the UI with the new track information
       media_track_status(title, artist);
+
+     //packet  type is 0x03 (weather)
+     } else if (packet[1] == 0x03) {
+      uint8_t weather_group = packet[3]; // weather_group (0-4)
+      String temp_c = String(packet[4]);
+      String humidity = String(packet[5]);
+      
+      char time_str[6]; // HH:MM + null
+      snprintf(time_str, sizeof(time_str), "%02d:%02d", packet[6], packet[7]);
+
+      if (weather_group >= 0 && weather_group < 5) {
+        lv_img_set_src(ui_main_Image_weatherIcon, &weather_icon[weather_group]);
+      }
+      String weather_info = temp_c + "°C\n" + humidity + "%\n" + time_str;
+      lv_label_set_text(ui_main_Label_forecast, weather_info.c_str());
+      
 
     } // else packet  type is 0x02 (music), which is handled above
     // Reset packet index for next frame

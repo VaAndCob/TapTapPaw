@@ -17,7 +17,13 @@ ui_img_a_clock_png.c
 ui_img_shorthand_png.c
 ui_img_longhand_png.c
 ui_img_secondhand_png.c
+ui_img_sun_png.c
 ui_img_paw_png.c
+ui_img_cloud_png.c
+ui_img_icon_png.c
+ui_img_rain_png.c
+ui_img_snow_png.c
+ui_img_storm_png.c
 fonts/ui_font_DynaPuff10.c
 fonts/ui_font_DynaPuff18.c
 fonts/ui_font_itim16.c

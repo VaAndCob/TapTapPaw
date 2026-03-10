@@ -13,26 +13,29 @@ extern "C" {
 // SCREEN: ui_Screen_main
 extern void ui_Screen_main_screen_init(void);
 extern void ui_Screen_main_screen_destroy(void);
-extern void ui_event_Screen_main( lv_event_t * e);
-extern lv_obj_t *ui_Screen_main;
-extern lv_obj_t *ui_main_Container_cat;
-extern lv_obj_t *ui_main_Image_leftpaw;
-extern lv_obj_t *ui_main_Image_rightpawdown;
-extern lv_obj_t *ui_main_Image_rightpawup;
-extern lv_obj_t *ui_main_Image_sleepy;
-extern lv_obj_t *ui_main_Image_eyelid;
-extern lv_obj_t *ui_main_Chart_systeminfo;
-extern lv_obj_t *ui_main_Label_system;
-extern lv_obj_t *ui_main_Label_charge;
-extern lv_obj_t *ui_main_Panel_Clock;
-extern lv_obj_t *ui_main_Image_shorthand;
-extern lv_obj_t *ui_main_Image_longhand;
-extern lv_obj_t *ui_main_Image_secondhand;
-extern lv_obj_t *ui_main_Panel_music;
-extern lv_obj_t *ui_main_Label_status;
-extern lv_obj_t *ui_main_Label_title;
-extern lv_obj_t *ui_main_Label_artist;
-extern lv_obj_t *ui_main_Label_connection;
+extern void ui_event_Screen_main(lv_event_t * e);
+extern lv_obj_t * ui_Screen_main;
+extern lv_obj_t * ui_main_Container_cat;
+extern lv_obj_t * ui_main_Image_leftpaw;
+extern lv_obj_t * ui_main_Image_rightpawdown;
+extern lv_obj_t * ui_main_Image_rightpawup;
+extern lv_obj_t * ui_main_Image_sleepy;
+extern lv_obj_t * ui_main_Image_eyelid;
+extern lv_obj_t * ui_main_Chart_systeminfo;
+extern lv_obj_t * ui_main_Label_system;
+extern lv_obj_t * ui_main_Label_charge;
+extern lv_obj_t * ui_main_Panel_Clock;
+extern lv_obj_t * ui_main_Image_shorthand;
+extern lv_obj_t * ui_main_Image_longhand;
+extern lv_obj_t * ui_main_Image_secondhand;
+extern lv_obj_t * ui_main_Panel_music;
+extern lv_obj_t * ui_main_Label_status;
+extern lv_obj_t * ui_main_Label_title;
+extern lv_obj_t * ui_main_Label_artist;
+extern lv_obj_t * ui_main_Label_connection;
+extern lv_obj_t * ui_main_Panel_weather;
+extern lv_obj_t * ui_main_Image_weatherIcon;
+extern lv_obj_t * ui_main_Label_forecast;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

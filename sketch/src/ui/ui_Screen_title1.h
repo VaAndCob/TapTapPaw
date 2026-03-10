@@ -13,8 +13,8 @@ extern "C" {
 // SCREEN: ui_Screen_title1
 extern void ui_Screen_title1_screen_init(void);
 extern void ui_Screen_title1_screen_destroy(void);
-extern void ui_event_Screen_title1( lv_event_t * e);
-extern lv_obj_t *ui_Screen_title1;
+extern void ui_event_Screen_title1(lv_event_t * e);
+extern lv_obj_t * ui_Screen_title1;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

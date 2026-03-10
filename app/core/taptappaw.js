@@ -24,6 +24,8 @@ if (platform === "darwin") {
   console.log("💻 running on Windows (or other)");
 }
 
+const { getWeather, getGeoLocation } = require("./weather.js");
+
 // ---------------------------------------------------------
 // ⚙️ CONFIGURATION
 // ---------------------------------------------------------
@@ -241,6 +243,7 @@ if (process.resourcesPath && fs.existsSync(path.join(process.resourcesPath, "Med
 const { execFile, spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const { send } = require("process");
 
 async function getMediaInfo() {
     // =========================
@@ -326,6 +329,7 @@ function startStateUpdateLoop() {
   const start_header = 0xff;
   const status_header = 0x01; // 0x01 indicates this packet contains system status
   const data_length = 9; // Number of bytes in the data packet (excluding start byte and length byte)
+  const WEATHER_UPDATE_INTERVAL = 15*60*1000; // 15 minutes
   const STAT_UPDATE_INTERVAL = 1000; // ms
   const SERIAL_SEND_INTERVAL = 100; // ms
   let lastStatUpdateTime = 0;
@@ -404,6 +408,25 @@ function startStateUpdateLoop() {
       console.error("Error in state update loop:", error.message);
     }
   }, STAT_UPDATE_INTERVAL);
+
+
+  // send weather condition
+  const updateWeather = async () => {
+    try {
+      const location = await getGeoLocation();
+      console.log(`📍 Got location via IP: Lat ${location.lat}, Lon ${location.lon}`);
+      const weather = await getWeather(location.lat, location.lon);
+      sendWeather(weather);
+    } catch (error) {
+      console.error("Error getting weather:", error.message);
+    }
+  };
+
+  // Update weather immediately on start, then at the regular interval.
+  updateWeather();
+  setInterval(updateWeather, WEATHER_UPDATE_INTERVAL);
+
+
 } // startStateUpdate
 
 //---------------------
@@ -434,6 +457,39 @@ function sendMusic(title, artist) {
   if (port && port.isOpen) {
     port.write(packet, (err) => {
       if (err) console.log("Music write error:", err.message);
+    });
+  }
+}
+
+
+  /*
+  Weather Packet Format:
+[0xFF]        - Start byte
+[0x03]        - Weather packet header
+[data_length] - Total length of the following data
+[weather_group] - Weather group 
+[temp_c]      - Temperature in Celsius
+[humid]       - Humidity percentage
+[time_h]      - Hour of the day
+[time_m]      - Minute of the hour
+*/
+function sendWeather(weather) {
+  const start_header = 0xff;
+  const weather_header = 0x03; // 0x03 weather packet
+  const data_length = 5; // weather_group, temp_c, humid, time_h, time_m
+  const weather_group = weather.weather_group;
+  const temp_c = weather.temp_c;
+  const humid = weather.humidity;
+  const date = new Date(weather.observed_at);
+  const time_h = date.getHours();
+  const time_m = date.getMinutes();
+  
+  const packet =  Buffer.from([start_header, weather_header, data_length, weather_group, temp_c, humid, time_h, time_m]);
+
+  console.log(packet);
+  if (port && port.isOpen) {
+    port.write(packet, (err) => {
+      if (err) console.log("Weather write error:", err.message);
     });
   }
 }

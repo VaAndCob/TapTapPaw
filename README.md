@@ -23,6 +23,7 @@ Behind the cuteness is a real-time hardware bridge, designed for boards like the
 * 🖱️ **Input Awareness** — Reacts to keyboard and mouse activity
 * 📊 **System Telemetry** — CPU, RAM, battery level, charging status
 * 🎵 **Music Status** — Displays current playback state and track info
+* ☀️ **Weather Condition** — Displays current weather condition by current geolocation
 * 🧸 **Cute UI** — Designed with playful animations using LVGL
 * 🔌 **Low-Latency Serial Link** — Efficient binary protocol over USB
 * 🌗 Auto dimming — Shifts brightness based on ambient light levels.

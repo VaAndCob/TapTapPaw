@@ -11,49 +11,58 @@ extern "C" {
 #endif
 
 #if defined __has_include
-  #if __has_include("lvgl.h")
-    #include "lvgl.h"
-  #elif __has_include("lvgl/lvgl.h")
-    #include "lvgl/lvgl.h"
-  #else
-    #include "lvgl.h"
-  #endif
+#if __has_include("lvgl.h")
+#include "lvgl.h"
+#elif __has_include("lvgl/lvgl.h")
+#include "lvgl/lvgl.h"
 #else
-  #include "lvgl.h"
+#include "lvgl.h"
+#endif
+#else
+#include "lvgl.h"
 #endif
 
 #include "ui_helpers.h"
 #include "ui_events.h"
 
 ///////////////////// SCREENS ////////////////////
+
 #include "ui_Screen_title1.h"
 #include "ui_Screen_main.h"
 #include "ui_Screen_setting.h"
 
 ///////////////////// VARIABLES ////////////////////
 
+
 // EVENTS
-extern lv_obj_t *ui_Startevents____initial_actions0;
+
+extern lv_obj_t * ui_Startevents____initial_actions0;
 
 // IMAGES AND IMAGE SETS
-LV_IMG_DECLARE( ui_img_taptappaw_png);   // assets/taptappaw.png
-LV_IMG_DECLARE( ui_img_wallpaper_png);   // assets/wallpaper.png
-LV_IMG_DECLARE( ui_img_main_png);   // assets/main.png
-LV_IMG_DECLARE( ui_img_leftmousepaw_png);   // assets/leftMousePaw.png
-LV_IMG_DECLARE( ui_img_rightpawdown_png);   // assets/rightpawdown.png
-LV_IMG_DECLARE( ui_img_rightpawup_png);   // assets/rightpawup.png
-LV_IMG_DECLARE( ui_img_sleepy_png);   // assets/sleepy.png
-LV_IMG_DECLARE( ui_img_closeeye_png);   // assets/closeeye.png
-LV_IMG_DECLARE( ui_img_a_clock_png);   // assets/a_clock.png
-LV_IMG_DECLARE( ui_img_shorthand_png);   // assets/shorthand.png
-LV_IMG_DECLARE( ui_img_longhand_png);   // assets/longhand.png
-LV_IMG_DECLARE( ui_img_secondhand_png);   // assets/secondhand.png
-LV_IMG_DECLARE( ui_img_paw_png);   // assets/paw.png
+LV_IMG_DECLARE(ui_img_taptappaw_png);    // assets/taptappaw.png
+LV_IMG_DECLARE(ui_img_wallpaper_png);    // assets/wallpaper.png
+LV_IMG_DECLARE(ui_img_main_png);    // assets/main.png
+LV_IMG_DECLARE(ui_img_leftmousepaw_png);    // assets/leftMousePaw.png
+LV_IMG_DECLARE(ui_img_rightpawdown_png);    // assets/rightpawdown.png
+LV_IMG_DECLARE(ui_img_rightpawup_png);    // assets/rightpawup.png
+LV_IMG_DECLARE(ui_img_sleepy_png);    // assets/sleepy.png
+LV_IMG_DECLARE(ui_img_closeeye_png);    // assets/closeeye.png
+LV_IMG_DECLARE(ui_img_a_clock_png);    // assets/a_clock.png
+LV_IMG_DECLARE(ui_img_shorthand_png);    // assets/shorthand.png
+LV_IMG_DECLARE(ui_img_longhand_png);    // assets/longhand.png
+LV_IMG_DECLARE(ui_img_secondhand_png);    // assets/secondhand.png
+LV_IMG_DECLARE(ui_img_sun_png);    // assets/sun.png
+LV_IMG_DECLARE(ui_img_paw_png);    // assets/paw.png
+LV_IMG_DECLARE(ui_img_cloud_png);    // assets/cloud.png
+LV_IMG_DECLARE(ui_img_icon_png);    // assets/icon.png
+LV_IMG_DECLARE(ui_img_rain_png);    // assets/rain.png
+LV_IMG_DECLARE(ui_img_snow_png);    // assets/snow.png
+LV_IMG_DECLARE(ui_img_storm_png);    // assets/storm.png
 
 // FONTS
-LV_FONT_DECLARE( ui_font_DynaPuff10);
-LV_FONT_DECLARE( ui_font_DynaPuff18);
-LV_FONT_DECLARE( ui_font_itim16);
+LV_FONT_DECLARE(ui_font_DynaPuff10);
+LV_FONT_DECLARE(ui_font_DynaPuff18);
+LV_FONT_DECLARE(ui_font_itim16);
 
 // UI INIT
 void ui_init(void);
