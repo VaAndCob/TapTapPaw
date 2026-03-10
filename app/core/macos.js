@@ -76,8 +76,6 @@ setInterval(() => {
     }
     // Do not log `state` continuously; frequent console output interferes
     // with interactive prompts (e.g. `readline.question`) on macOS.
-    state.mouseMove = false; // Reset mousemove state after reporting
-}, 200)
     // This interval is now only for monitoring queue size if needed.
     // Mouse move state is handled by the timeout.
 }, 1000) // Check less frequently

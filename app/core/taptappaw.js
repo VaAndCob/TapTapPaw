@@ -269,7 +269,7 @@ async function getMediaInfo() {
         return "stopped||||"
         `;
 
-        execFile(`osascript -e '${script}'`, (error, stdout, stderr) => {
+        execFile('osascript', ['-e', script], (error, stdout, stderr) => {
           if (error || stderr) return resolve(null);
 
           const [stateStr, track, artist] = stdout.trim().split("||");
