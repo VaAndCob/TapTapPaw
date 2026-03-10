@@ -6,3 +6,7 @@
 **/.vscode/ipch
 **/dist
 **/node_modules
+**/bin
+**/obj
+/build
+/.codex-dotnet-home

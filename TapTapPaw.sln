@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{F95F473B-E98A-ACD6-1986-755F447BE36F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{4E203919-87E7-93EC-6061-3436B6FBCB45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaBridge", "app\core\MediaBridge\MediaBridge.csproj", "{2EB6ABA5-D50A-A918-9486-9F640E8B8DB5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EB6ABA5-D50A-A918-9486-9F640E8B8DB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EB6ABA5-D50A-A918-9486-9F640E8B8DB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EB6ABA5-D50A-A918-9486-9F640E8B8DB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EB6ABA5-D50A-A918-9486-9F640E8B8DB5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4E203919-87E7-93EC-6061-3436B6FBCB45} = {F95F473B-E98A-ACD6-1986-755F447BE36F}
+		{2EB6ABA5-D50A-A918-9486-9F640E8B8DB5} = {4E203919-87E7-93EC-6061-3436B6FBCB45}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E22A19B-00EB-47E9-BAED-0C9011FCA682}
+	EndGlobalSection
+EndGlobal
