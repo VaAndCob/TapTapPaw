@@ -32,6 +32,7 @@ const { getWeather, getGeoLocation } = require("./weather.js");
 const BAUD_RATE = 115200;
 let port;
 let queryLoopRunning = false;
+let stateUpdateTimers = []; // To hold interval timer IDs
 
 async function listPorts() {
   return await SerialPort.list();
@@ -44,7 +45,7 @@ function connectTo(path, onConnect, onError) {
       performOpen(path, onConnect, onError);
     });
   } else {
-    performOpen(path, onConnect, onError);
+      performOpen(path, onConnect, onError);
   }
 }
 
@@ -52,9 +53,11 @@ function disconnect(onDisconnect) {
   if (port && port.isOpen) {
     port.close((err) => {
       if (err) console.log("Error closing port:", err.message);
+      stopStateUpdateLoop();
       if (onDisconnect) onDisconnect();
     });
   } else {
+    stopStateUpdateLoop();
     if (onDisconnect) onDisconnect();
   }
 }
@@ -132,6 +135,14 @@ async function setupSerialPort(onConnect, onError) {
 
 //setupSerialPort();
 
+function stopStateUpdateLoop() {
+  if (!queryLoopRunning) return;
+  console.log("Stopping state update loop...");
+  stateUpdateTimers.forEach((timerId) => clearInterval(timerId));
+  stateUpdateTimers = [];
+  queryLoopRunning = false;
+}
+
 // ---------------------------------------------------------
 // 🧠 MAIN LOOP
 // ---------------------------------------------------------
@@ -196,6 +207,14 @@ let latestWindowsMedia = {
   artist: "",
   app: ""
 };
+
+function stopWindowsBridge() {
+  if (bridgeProcess && process.platform === "win32") {
+    bridgeProcess.kill();
+    bridgeProcess = null;
+  }
+}
+
 
 function startWindowsBridge() {
   if (process.platform !== "win32") return;
@@ -334,8 +353,8 @@ function startStateUpdateLoop() {
   const SERIAL_SEND_INTERVAL = 100; // ms
   let lastStatUpdateTime = 0;
 
-  // keyboard & mouse monitoring 100 ms interval
-  setInterval(async () => {
+  // 1. keyboard & mouse monitoring 100 ms interval
+  const serialSendTimer = setInterval(async () => {
     try {
       // one byte per input (bit positions):
       // bit0 = key down (1)
@@ -386,9 +405,10 @@ function startStateUpdateLoop() {
       console.error("Error in state update loop:", error.message);
     }
   }, SERIAL_SEND_INTERVAL);
+  stateUpdateTimers.push(serialSendTimer);
 
-  //query system informatin and media Info every 1 sec
-  setInterval(async () => {
+  // 2. SYSTEM STATUS and MEDIA INFOMATION every 1 sec
+  const statUpdateTimer = setInterval(async () => {
     try {
       const sysStats = await getSystemStats();
       const mediaInfo = await getMediaInfo();
@@ -408,9 +428,9 @@ function startStateUpdateLoop() {
       console.error("Error in state update loop:", error.message);
     }
   }, STAT_UPDATE_INTERVAL);
+  stateUpdateTimers.push(statUpdateTimer);
 
-
-  // send weather condition
+  // 3. WEATHER CONDITION every 15 minutes
   const updateWeather = async () => {
     try {
       const location = await getGeoLocation();
@@ -424,8 +444,8 @@ function startStateUpdateLoop() {
 
   // Update weather immediately on start, then at the regular interval.
   updateWeather();
-  setInterval(updateWeather, WEATHER_UPDATE_INTERVAL);
-
+  const weatherUpdateTimer = setInterval(updateWeather, WEATHER_UPDATE_INTERVAL);
+  stateUpdateTimers.push(weatherUpdateTimer);
 
 } // startStateUpdate
 
@@ -497,4 +517,4 @@ function sendWeather(weather) {
 //------------------------------------
 
 //================================
-module.exports = { setupSerialPort, listPorts, connectTo, disconnect };
+module.exports = { setupSerialPort, listPorts, connectTo, disconnect, stopWindowsBridge };

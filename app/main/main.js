@@ -6,12 +6,13 @@ const {
 } = require("electron");
 const path = require("path");
 const fs = require("fs");
-const { listPorts, connectTo, disconnect } = require("../core/taptappaw");
+const { listPorts, connectTo, disconnect, stopWindowsBridge } = require("../core/taptappaw");
 const { get } = require("http");
 
 let tray = null;
 const CONFIG_PATH = path.join(app.getPath("userData"), "port-config.json");
 
+// ----------- Function ------------------
 function getTrayIconPath() {
   if (process.platform === "darwin") {
     // MUST end with Template.png for macOS tray
@@ -109,13 +110,6 @@ function disconnectPort() {
 }
 
 
-function stopWindowsBridge() {
-  if (bridgeProcess) {
-    bridgeProcess.kill();
-    bridgeProcess = null;
-  }
-}
-
 process.on("exit", stopWindowsBridge);
 process.on("SIGINT", () => {
   stopWindowsBridge();
@@ -126,8 +120,9 @@ process.on("SIGTERM", () => {
   process.exit();
 });
 
-
-//App entry point
+//===================================================
+// APP Entry Point
+//===================================================
 app.whenReady().then(async () => {
   try {
     // --- macOS tray-only mode ---

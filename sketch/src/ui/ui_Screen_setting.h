@@ -13,20 +13,20 @@ extern "C" {
 // SCREEN: ui_Screen_setting
 extern void ui_Screen_setting_screen_init(void);
 extern void ui_Screen_setting_screen_destroy(void);
-extern void ui_event_Screen_setting(lv_event_t * e);
-extern lv_obj_t * ui_Screen_setting;
-extern lv_obj_t * ui_setting_Textarea_message;
-extern lv_obj_t * ui_setting_Label_Label1;
-extern void ui_event_setting_Slider_backlight(lv_event_t * e);
-extern lv_obj_t * ui_setting_Slider_backlight;
-extern void ui_event_setting_Slider_volume(lv_event_t * e);
-extern lv_obj_t * ui_setting_Slider_volume;
-extern void ui_event_setting_Switch_sound(lv_event_t * e);
-extern lv_obj_t * ui_setting_Switch_sound;
-extern void ui_event_setting_Button_saveconfig(lv_event_t * e);
-extern lv_obj_t * ui_setting_Button_saveconfig;
-extern lv_obj_t * ui_setting_Label_Label2;
-extern lv_obj_t * ui_setting_Label_version;
+extern void ui_event_Screen_setting( lv_event_t * e);
+extern lv_obj_t *ui_Screen_setting;
+extern lv_obj_t *ui_setting_Textarea_message;
+extern lv_obj_t *ui_setting_Label_Label1;
+extern void ui_event_setting_Slider_backlight( lv_event_t * e);
+extern lv_obj_t *ui_setting_Slider_backlight;
+extern void ui_event_setting_Slider_volume( lv_event_t * e);
+extern lv_obj_t *ui_setting_Slider_volume;
+extern void ui_event_setting_Switch_sound( lv_event_t * e);
+extern lv_obj_t *ui_setting_Switch_sound;
+extern void ui_event_setting_Button_saveconfig( lv_event_t * e);
+extern lv_obj_t *ui_setting_Button_saveconfig;
+extern lv_obj_t *ui_setting_Label_Label2;
+extern lv_obj_t *ui_setting_Label_version;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

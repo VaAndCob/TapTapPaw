@@ -21,6 +21,7 @@ SET(SOURCES ui_Screen_title1.c
     ui_img_paw_png.c
     ui_img_cloud_png.c
     ui_img_icon_png.c
+    ui_img_moon_png.c
     ui_img_rain_png.c
     ui_img_snow_png.c
     ui_img_storm_png.c

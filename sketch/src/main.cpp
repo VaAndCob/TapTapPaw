@@ -42,7 +42,7 @@ static uint8_t packetLength = 0;
 unsigned long connect_timer = 0;
 bool app_connected = false;
 bool last_connected_state = true;
-const lv_img_dsc_t weather_icon[5] = {ui_img_sun_png, ui_img_cloud_png, ui_img_rain_png, ui_img_storm_png, ui_img_snow_png};
+const lv_img_dsc_t weather_icon[6] = {ui_img_sun_png, ui_img_cloud_png, ui_img_rain_png, ui_img_storm_png, ui_img_snow_png, ui_img_moon_png};
 
 
 //-----------------------------------------
@@ -194,7 +194,9 @@ void serial_parse(byte b) {
       char time_str[6]; // HH:MM + null
       snprintf(time_str, sizeof(time_str), "%02d:%02d", packet[6], packet[7]);
 
-      if (weather_group >= 0 && weather_group < 5) {
+      if (weather_group == 0 && packet[6] >= 18 || packet[6] < 6) weather_group = 5;//moon
+       
+      if (weather_group >= 0 && weather_group < 6) {
         lv_img_set_src(ui_main_Image_weatherIcon, &weather_icon[weather_group]);
       }
       String weather_info = temp_c + "°C\n" + humidity + "%\n" + time_str;

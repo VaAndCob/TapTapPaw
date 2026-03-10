@@ -33,7 +33,7 @@ function classify(code) {
   if ([2, 3, 45, 48].includes(code)) return 1;//"cloud";
   if ([51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return 2;//"rain";
   if ([95, 96, 99].includes(code)) return 3;//"storm";
-  if ([71, 73, 75].includes(code)) return 4;//"snow";
+  if ([71, 73, 75, 77].includes(code)) return 4;//"snow";
   return "unknown";
 }
 
@@ -77,7 +77,7 @@ async function getWeather(lat, lon) {
 }
 
 // example usage
-/*
+
 (async () => {
   try {
     const weather = await getWeather(13.7563, 100.5018); // Bangkok
@@ -86,6 +86,6 @@ async function getWeather(lat, lon) {
     console.error(err.message);
   }
 })();
-*/
+
 
 module.exports = { getWeather, getGeoLocation };
