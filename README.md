@@ -25,6 +25,7 @@ Behind the cuteness is a real-time hardware bridge, designed for boards like the
 * 🎵 **Music Status** — Displays current playback state and track info
 * 🧸 **Cute UI** — Designed with playful animations using LVGL
 * 🔌 **Low-Latency Serial Link** — Efficient binary protocol over USB
+* 🌗 Auto dimming — Shifts brightness based on ambient light levels.
 
 ## 📂 Project Structure
 

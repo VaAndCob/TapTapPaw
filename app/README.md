@@ -2,6 +2,8 @@
 
 A cross-platform desktop application built with Electron.
 
+![](../document/desktopapp.jpg)
+
 ## Description
 
 TapTapPaw appears to be a utility that interfaces with hardware through a serial port while also monitoring system-wide keyboard and mouse inputs. It's designed to run on both Windows and macOS.
