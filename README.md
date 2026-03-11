@@ -4,7 +4,7 @@
 [![Electron](https://img.shields.io/badge/Electron-28.2.0-blue?logo=electron)](https://www.electronjs.org/)
 [![PlatformIO](https://img.shields.io/badge/PlatformIO-ESP32-orange?logo=platformio)](https://platformio.org/)
 
-**TapTapPaw**  is a **interactive desktop companion** that turns your everyday computer activity into a cute, living desk experience.
+**TapTapPaw** is an **interactive desktop companion** inspired by the Bongo Cat meme, turning your everyday computer activity into a cute, living desk experience.
 
 When you type on your keyboard, tiny paw taps animate on the screen.
 When you move your mouse, the character reacts playfully.
@@ -88,8 +88,14 @@ npm run build:win   # Windows
 ## 🔌 ESP32 Firmware (`sketch/`)
 The firmware runs on an ESP32 and renders visuals using **LVGL**. It parses incoming binary packets and updates animations in real time.
 
-### Recommended Board [Buy Here](https://s.click.aliexpress.com/e/_c3uiGvqR)
+## Bill of Materials (BOM) To build the full TapTapPaw, you need:
+
+1. Recommended Board [ESP32 2.8" purple capacitive touch screen](https://s.click.aliexpress.com/e/_c3uiGvqR)
 ![](document/board.jpg)
+
+2. Speaker 1 Watt 9x22 mm. → https://s.click.aliexpress.com/e/_c3fTkgxl
+3. Screw M2.3 x 4 = 4 pcs
+4. USB C Cable: To connect to your PC/Mac.
 
 ### Firmware Setup
 1. Install **VS Code**

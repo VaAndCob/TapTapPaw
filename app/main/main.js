@@ -3,11 +3,12 @@ const {
   Tray,
   Menu,
   dialog,
+  shell,
 } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const { listPorts, connectTo, disconnect, stopWindowsBridge } = require("../core/taptappaw");
-const { get } = require("http");
+
 
 let tray = null;
 const CONFIG_PATH = path.join(app.getPath("userData"), "port-config.json");
@@ -58,13 +59,13 @@ async function updateTrayMenu(status, currentPortPath) {
         await shell.openExternal("https://github.com/VaAndCob/taptappaw");
         }
      },
-
-    { id: "portStatus", label: "STATUS - " + status, enabled: false },
     { type: "separator" },
+    { id: "portStatus", label: "STATUS - " + status, enabled: false },
     {
       label: "🔄Scan Ports",
       click: () => updateTrayMenu(status, currentPortPath),
     },
+    { type: "separator" },
     { label: "Select Port:", enabled: false },
     ...portItems,
     { type: "separator" },
@@ -184,4 +185,3 @@ app.on("window-all-closed", (e) => {
 
 
 app.on("before-quit", stopWindowsBridge);
-
