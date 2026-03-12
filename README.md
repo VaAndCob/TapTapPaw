@@ -163,7 +163,10 @@ TapTapPaw is designed to be:
 
 This project includes a custom-designed 3D printable case. Its foldable style and adjustable tilt angle make it portable and easy to position on your desk.
 
-*(You can find the 3D files in the `3d print case/` directory. A link to Thingiverse/Printables will be added soon!)*
+[Grab 3d Print here](https://makerworld.com/en/models/2499316-taptappaw-esp32-2-8-foldable-stand-case-companion?fbclid=IwY2xjawQfJctleHRuA2FlbQIxMABicmlkETEwTWg0V3d3bmE3dGd1S3Rlc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHoWFr-hVyT1JCsCFT33WxL08UYZYpE7FZSkUTtOcf3qJHZyDQTpv6TiDYxLX_aem_Cnj7UKn6urSzDVcwXFKpkw#profileId-2747312)
+
+![case](document/Screenshot_5.jpg)
+
 
 ## 📜 License
 
