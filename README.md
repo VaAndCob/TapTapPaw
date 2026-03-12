@@ -143,6 +143,21 @@ Communication uses a lightweight binary protocol optimized for embedded devices.
 | …    | A_LEN  | Artist length        |
 | …    | ARTIST | UTF-8 artist         |
 
+### Weather Packet (On Change)
+
+| Byte | Field         | Description                    |
+| ---- | ------------- | ------------------------------ |
+| 0    | START         | `0xFF`                         |
+| 1    | TYPE          | `0x03` (Weather)               |
+| 2    | LEN           | Payload length (5)             |
+| 3    | W_GROUP       | Weather group ID (0-4)         |
+| 4    | TEMP_C        | Temperature in Celsius         |
+| 5    | HUMID         | Humidity (%)                   |
+| 6    | OBSERVED_H    | Observation time hour (0-23)   |
+| 7    | OBSERVED_M    | Observation time minute (0-59) |
+
+The weather group ID corresponds to conditions like Clear (0), Clouds (1), Rain (2), etc. The device firmware uses this ID and the observation time to display the correct icon (e.g., sun or moon for clear skies).
+
 ## 🧠 Tech Stack
 * **Electron** — Desktop application framework
 * **Node.js** — System telemetry & serial transport
