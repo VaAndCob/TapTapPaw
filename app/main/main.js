@@ -45,6 +45,11 @@ function loadConfig() {
 async function updateTrayMenu(status, currentPortPath) {
   if (!tray) return;
 
+  const version = app.getVersion();
+
+  const loginSettings = app.getLoginItemSettings();
+  const openAtLogin = loginSettings.openAtLogin;
+
   const ports = await listPorts();
   const portItems = ports.map((p) => ({
     label: p.path,
@@ -54,7 +59,7 @@ async function updateTrayMenu(status, currentPortPath) {
   }));
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: "🐾 TapTapPaw by Va&Cob 🐾", enabled: true,
+    { label: `🐾 TapTapPaw ${version} by Va&Cob 🐾`, enabled: true,
         click: async () => {
         await shell.openExternal("https://github.com/VaAndCob/taptappaw");
         }
@@ -74,7 +79,28 @@ async function updateTrayMenu(status, currentPortPath) {
       enabled: currentPortPath !== null,
       click: () => disconnectPort(),
     },
-
+    { type: "separator" },
+    {
+      label: "Run on Startup",
+      type: "checkbox",
+      checked: openAtLogin,
+      click: (item) => {
+        // This will work correctly only in a packaged app.
+        // In development, it may register the Electron executable itself.
+        app.setLoginItemSettings({
+          openAtLogin: item.checked,
+          path: app.getPath('exe'),
+          args: [
+            // This argument is added so that the app can detect it was
+            // launched on startup and decide to, for example, not show a window.
+            '--hidden',
+            // In development, we need to pass the path to the main script.
+            // In production, the app is self-contained and this is not needed.
+            ...(app.isPackaged ? [] : [path.resolve(process.argv[1])])
+          ]
+        });
+      },
+    },
     { type: "separator" },
     {
       label: "🚪Quit",

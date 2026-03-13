@@ -10,3 +10,4 @@
 **/obj
 /build
 /.codex-dotnet-home
+/app
