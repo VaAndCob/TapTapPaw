@@ -14,7 +14,7 @@
 #include "app_config.h" //<- open this file in "include" folder to config compile option
 //-------------------------------------------------------
 #include <Arduino.h>
-const String version = "1.0.0 | " __DATE__ "-" __TIME__;
+const String version = "1.0.1 | " __DATE__ "-" __TIME__;
 //-------------------------------------------------------
 #include "LGFX_CYD.h"
 #include "ui/ui.h"
@@ -27,7 +27,8 @@ const String version = "1.0.0 | " __DATE__ "-" __TIME__;
 
 #define TFT_WIDTH 320
 #define TFT_HEIGHT 240
-#define CONNECTION_TIMEOUT 2000
+#define CONNECTION_TIMEOUT 2000  //serial connection timeout in ms
+#define SLEEPMODE_TIMEOUT 5*60*1000 //put display to sleep after disconnect for 5 min
 
 LGFX tft; /* LGFX instance */
 // variable
@@ -324,12 +325,17 @@ void loop() {
       lv_label_set_text(ui_main_Label_connection, LV_SYMBOL_WARNING);
       beep();
     } else { // serial connected
+      tft.wakeup();
       led_color(1, 0, 1); // green on to serial connected
       lv_obj_set_style_text_color(ui_main_Label_connection, lv_color_hex(0x00FF00), LV_PART_MAIN);
       lv_label_set_text(ui_main_Label_connection, LV_SYMBOL_USB);
       beepbeep();
     }
     last_connected_state = app_connected;
+  }
+  //put to sleep mode
+  if (!app_connected && millis() - connect_timer > SLEEPMODE_TIMEOUT) {
+    tft.sleep();
   }
 
   //------------------------------------
