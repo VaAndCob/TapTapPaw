@@ -43,6 +43,7 @@ static uint8_t packetLength = 0;
 unsigned long connect_timer = 0;
 bool app_connected = false;
 bool last_connected_state = true;
+
 const lv_img_dsc_t weather_icon[6] = {ui_img_sun_png, ui_img_cloud_png, ui_img_rain_png, ui_img_storm_png, ui_img_snow_png, ui_img_moon_png};
 
 
@@ -326,6 +327,10 @@ void loop() {
       beep();
     } else { // serial connected
       tft.wakeup();
+      tft.writeCommand(0x29);
+      if (!dim) tft.setBrightness(brightness);
+      else tft.setBrightness(dim_brightness);
+
       led_color(1, 0, 1); // green on to serial connected
       lv_obj_set_style_text_color(ui_main_Label_connection, lv_color_hex(0x00FF00), LV_PART_MAIN);
       lv_label_set_text(ui_main_Label_connection, LV_SYMBOL_USB);
@@ -335,7 +340,9 @@ void loop() {
   }
   //put to sleep mode
   if (!app_connected && millis() - connect_timer > SLEEPMODE_TIMEOUT) {
+    tft.writeCommand(0x28);  // display off
     tft.sleep();
+    tft.setBrightness(0); // turn off backlight
   }
 
   //------------------------------------
