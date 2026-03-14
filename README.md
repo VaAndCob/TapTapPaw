@@ -13,7 +13,7 @@ Soft sound effects respond to clicks and keystrokes, making your workflow feel a
 Behind the cuteness is a real-time hardware bridge, designed for boards like the recommended [ESP32 2.8" purple capacitive touch screen](https://s.click.aliexpress.com/e/_c3uiGvqR). It streams system stats, clock data, and media information directly from your computer.
 
 > TapTapPaw is not just a monitor. It’s a tiny animated desk buddy that reacts to you in real time.
-
+## [Wartch on Youtube](https://youtu.be/Lp3rQJZUCo0)
 ![](document/screen.jpg)
 ![](document/animation.gif)
 
@@ -58,7 +58,7 @@ The desktop app runs quietly in the system tray (Windows) or menu bar (macOS). I
    * System Settings → Privacy & Security
 4. Launch the app and select the ESP32 serial port
 
-[Download macOS Apple Silicon](https://github.com/VaAndCob/TapTapPaw/releases/download/v1.0.0/TapTapPaw-1.0.0-arm64.dmg)
+[Download macOS Apple Silicon](https://github.com/VaAndCob/TapTapPaw/releases/download/v1.0.1/TapTapPaw-1.0.1-arm64.dmg)
 
 #### Windows
 1. Download the latest `.exe` installer from **Releases**
@@ -66,7 +66,7 @@ The desktop app runs quietly in the system tray (Windows) or menu bar (macOS). I
 3. Launch TapTapPaw from the system tray
 4. Select your ESP32 serial port
 
-[Download Windows x64](https://github.com/VaAndCob/TapTapPaw/releases/download/v1.0.0/TapTapPaw.Setup.1.0.0.exe)
+[Download Windows x64](https://github.com/VaAndCob/TapTapPaw/releases/download/v1.0.1/TapTapPaw.Setup.1.0.1.exe)
 
 ---
 
