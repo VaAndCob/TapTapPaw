@@ -218,7 +218,7 @@ lv_obj_set_x( ui_main_Label_status, 0 );
 lv_obj_set_y( ui_main_Label_status, -10 );
 lv_obj_set_align( ui_main_Label_status, LV_ALIGN_TOP_MID );
 lv_label_set_long_mode(ui_main_Label_status,LV_LABEL_LONG_SCROLL_CIRCULAR);
-lv_label_set_text(ui_main_Label_status,"-");
+lv_label_set_text(ui_main_Label_status,"[ Status ]");
 lv_obj_clear_flag( ui_main_Label_status, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN );    /// Flags
 lv_obj_set_scrollbar_mode(ui_main_Label_status, LV_SCROLLBAR_MODE_OFF);
 lv_obj_set_style_text_color(ui_main_Label_status, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT );
@@ -230,7 +230,7 @@ lv_obj_set_width( ui_main_Label_title, lv_pct(100));
 lv_obj_set_height( ui_main_Label_title, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_align( ui_main_Label_title, LV_ALIGN_CENTER );
 lv_label_set_long_mode(ui_main_Label_title,LV_LABEL_LONG_SCROLL_CIRCULAR);
-lv_label_set_text(ui_main_Label_title,"Spotify/Music/iTunes");
+lv_label_set_text(ui_main_Label_title,"Youtube/Spotify/Music/iTunes -");
 lv_obj_clear_flag( ui_main_Label_title, LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN );    /// Flags
 lv_obj_set_scrollbar_mode(ui_main_Label_title, LV_SCROLLBAR_MODE_OFF);
 lv_obj_set_style_text_color(ui_main_Label_title, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT );
@@ -251,10 +251,12 @@ lv_obj_set_style_text_color(ui_main_Label_artist, lv_color_hex(0xFFFFFF), LV_PAR
 lv_obj_set_style_text_opa(ui_main_Label_artist, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_align(ui_main_Label_artist, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN| LV_STATE_DEFAULT);
 
-ui_main_Label_connection = lv_label_create(ui_Screen_main);
+ui_main_Label_connection = lv_label_create(ui_main_Panel_music);
 lv_obj_set_width( ui_main_Label_connection, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_main_Label_connection, LV_SIZE_CONTENT);   /// 1
-lv_obj_set_align( ui_main_Label_connection, LV_ALIGN_BOTTOM_LEFT );
+lv_obj_set_x( ui_main_Label_connection, 10 );
+lv_obj_set_y( ui_main_Label_connection, -13 );
+lv_obj_set_align( ui_main_Label_connection, LV_ALIGN_TOP_RIGHT );
 lv_label_set_text(ui_main_Label_connection,"U");
 lv_obj_set_style_text_align(ui_main_Label_connection, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN| LV_STATE_DEFAULT);
 lv_obj_set_style_text_font(ui_main_Label_connection, &lv_font_montserrat_20, LV_PART_MAIN| LV_STATE_DEFAULT);
