@@ -26,7 +26,8 @@ Behind the cuteness is a real-time hardware bridge, designed for boards like the
 * ☀️ **Weather Condition** — Displays current weather condition by current geolocation
 * 🧸 **Cute UI** — Designed with playful animations using LVGL
 * 🔌 **Low-Latency Serial Link** — Efficient binary protocol over USB
-* 🌗 Auto dimming — Shifts brightness based on ambient light levels.
+* 🌗 **Auto backlight**— Shifts brightness based on ambient light levels.
+* 🔌 **Auto sleep** — Display will be automatically turned off after disconnected for 5 minutes
 
 ## 📂 Project Structure
 
