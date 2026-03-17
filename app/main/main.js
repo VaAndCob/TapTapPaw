@@ -4,14 +4,21 @@ const {
   Menu,
   dialog,
   shell,
+  BrowserWindow,
+  ipcMain,
 } = require("electron");
 const path = require("path");
 const fs = require("fs");
+const https = require("https");
 const { listPorts, connectTo, disconnect, stopWindowsBridge } = require("../core/taptappaw");
 
 
 let tray = null;
 const CONFIG_PATH = path.join(app.getPath("userData"), "port-config.json");
+const FIRMWARE_MANIFEST_URL =
+  "https://raw.githubusercontent.com/VaAndCob/webpage/main/firmware/taptappaw/taptappaw_manifest.json";
+let currentPortPath = null;
+let lastTrayStatus = "Initializing...";
 
 // ----------- Function ------------------
 function getTrayIconPath() {
@@ -23,9 +30,9 @@ function getTrayIconPath() {
   }
 }
 
-function saveConfig(portPath) {
+function saveConfig(config) {
   try {
-    fs.writeFileSync(CONFIG_PATH, JSON.stringify({ lastPort: portPath }));
+    fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
   } catch (e) {
     console.error("Failed to save config", e);
   }
@@ -42,10 +49,90 @@ function loadConfig() {
   return {};
 }
 
-async function updateTrayMenu(status, currentPortPath) {
+function fetchJson(url) {
+  return new Promise((resolve, reject) => {
+    https
+      .get(url, (res) => {
+        if (res.statusCode !== 200) {
+          res.resume();
+          reject(new Error(`HTTP ${res.statusCode}`));
+          return;
+        }
+        let data = "";
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          data += chunk;
+        });
+        res.on("end", () => {
+          try {
+            resolve(JSON.parse(data));
+          } catch (e) {
+            reject(e);
+          }
+        });
+      })
+      .on("error", reject);
+  });
+}
+
+function isNewerVersion(latest, current) {
+  const latestParts = String(latest).split(".").map((n) => parseInt(n, 10));
+  const currentParts = String(current).split(".").map((n) => parseInt(n, 10));
+
+  if (latestParts.some(Number.isNaN) || currentParts.some(Number.isNaN)) {
+    return false;
+  }
+
+  const len = Math.max(latestParts.length, currentParts.length);
+  for (let i = 0; i < len; i += 1) {
+    const a = latestParts[i] || 0;
+    const b = currentParts[i] || 0;
+    if (a > b) return true;
+    if (a < b) return false;
+  }
+  return false;
+}
+
+async function checkFirmwareUpdate() {
+  try {
+    const config = loadConfig();
+    const currentVersion = config.firmwareVersion || app.getVersion();
+
+    const manifest = await fetchJson(FIRMWARE_MANIFEST_URL);
+    const latestVersion = manifest?.version;
+    if (!latestVersion) {
+      console.warn("Firmware manifest missing version.");
+      return;
+    }
+
+    if (isNewerVersion(latestVersion, currentVersion)) {
+      const result = await dialog.showMessageBox({
+        type: "info",
+        buttons: ["Open Download Page", "OK"],
+        defaultId: 0,
+        cancelId: 1,
+        title: "Firmware Update Available",
+        message: "A newer 🐾TapTapPaw🐾 firmware is available.",
+        detail: `Current: ${currentVersion}\nLatest: ${latestVersion}\n\nDownload instructions:\n1. Open the download page.\n2. Select the TapTapPaw tab.`,
+      });
+      if (result.response === 0) {
+        await shell.openExternal("https://vaandcob.github.io/webpage/src/index.html");
+      }
+    } else {
+      console.log("No firmware update available.");
+    }
+  } catch (err) {
+    console.error("Firmware update check failed:", err);
+  }
+}
+
+async function updateTrayMenu(status) {
   if (!tray) return;
 
+  lastTrayStatus = status;
   const version = app.getVersion();
+  const config = loadConfig();
+  const locationMode = config.location?.mode || "auto";
 
   const loginSettings = app.getLoginItemSettings();
   const openAtLogin = loginSettings.openAtLogin;
@@ -67,21 +154,36 @@ async function updateTrayMenu(status, currentPortPath) {
     { type: "separator" },
     { id: "portStatus", label: "STATUS - " + status, enabled: false },
     {
-      label: "🔄Scan Ports",
-      click: () => updateTrayMenu(status, currentPortPath),
+      label: "Select Port",
+      submenu: portItems.length > 0 ? portItems : [{ label: "No ports found", enabled: false }],
     },
-    { type: "separator" },
-    { label: "Select Port:", enabled: false },
-    ...portItems,
-    { type: "separator" },
-    {
-      label: "❌Disconnect",
+ 
+        {
+      label: "❌ Disconnect",
       enabled: currentPortPath !== null,
       click: () => disconnectPort(),
     },
     { type: "separator" },
     {
-      label: "Run on Startup",
+      label: "📍 Weather Condition Geolocation",
+      submenu: [
+        {
+          label: "Auto-detect",
+          type: "radio",
+          checked: locationMode === "auto",
+          click: () => setLocationMode("auto"),
+        },
+        {
+          label: "Set Manually...",
+          type: "radio",
+          checked: locationMode === "manual",
+          click: () => setLocationManually(),
+        },
+      ],
+    },
+    { type: "separator" },
+    {
+      label: "🖥 Run on Startup",
       type: "checkbox",
       checked: openAtLogin,
       click: (item) => {
@@ -112,30 +214,98 @@ async function updateTrayMenu(status, currentPortPath) {
 }
 
 function connectToPort(portPath) {
-  updateTrayMenu(`Connecting to ${portPath}...`, portPath);
+  updateTrayMenu(`Connecting to ${portPath}...`);
+  const config = loadConfig();
 
   connectTo(
     portPath,
     (portInfo) => {
-      saveConfig(portPath);
-      updateTrayMenu(`Connected to ${portPath}`, portPath);
+      currentPortPath = portPath;
+      const newConfig = { ...config, lastPort: portPath };
+      saveConfig(newConfig);
+      updateTrayMenu(`Connected to ${portPath}`);
     },
     (error) => {
-      updateTrayMenu(`Error: ${error.message}`, null);
+      currentPortPath = null;
+      updateTrayMenu(`Error: ${error.message}`);
       dialog.showErrorBox(
         "TapTapPaw Serial Error",
         error?.message || "Unknown serial error",
       );
     },
+    { location: config.location },
   );
 }
 
 function disconnectPort() {
   disconnect(() => {
-    updateTrayMenu("Disconnected", null);
+    currentPortPath = null;
+    updateTrayMenu("Disconnected");
   });
 }
 
+function setLocationMode(mode) {
+  const config = loadConfig();
+  if (!config.location) config.location = {};
+  config.location.mode = mode;
+  saveConfig(config);
+
+  if (currentPortPath) {
+    connectToPort(currentPortPath); // Reconnect to apply changes
+  }
+  updateTrayMenu(currentPortPath ? `Connected to ${currentPortPath}` : "Disconnected");
+}
+
+async function setLocationManually() {
+  await shell.openExternal("https://www.google.com/maps");
+
+  const promptContent = `
+    <html>
+      <body style="font-family: sans-serif; padding: 1em; text-align: center; background-color: #282c34; color: white;">
+        <h3>Enter Coordinates</h3>
+        <p>Find coordinates on Google Maps, then paste them here.</p>
+        <form style="display: flex; flex-direction: column; align-items: center;">
+          <div style="display: flex; justify-content: center; align-items: center;">
+            Lat: <input id="lat" type="text" placeholder="e.g., 40.7128" required style="margin-right: 10px; width: 180px;" />
+            Lon: <input id="lon" type="text" placeholder="e.g., -74.0060" required style="width: 180px;" /></div><br/>
+          <button type="submit" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">💾 Save</button>
+        </form>
+        <script>
+          const { ipcRenderer } = require('electron'); // This is safe because nodeIntegration is true for this specific window
+          document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const lat = document.querySelector('#lat').value;
+            const lon = document.querySelector('#lon').value;
+            if (lat && lon) {
+              ipcRenderer.send('manual-location-update', { lat, lon });
+            }
+          });
+        </script>
+      </body>
+    </html>
+  `;
+
+  const promptWindow = new BrowserWindow({
+    width: 500, height: 250, title: "Enter Coordinates", autoHideMenuBar: true, alwaysOnTop: true,
+    webPreferences: { nodeIntegration: true, contextIsolation: false },
+  });
+
+  promptWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(promptContent)}`);
+
+  ipcMain.once("manual-location-update", (event, { lat, lon }) => {
+    if (promptWindow && !promptWindow.isDestroyed()) promptWindow.close();
+
+    const config = loadConfig();
+    if (!config.location) config.location = {};
+    config.location.mode = "manual";
+    config.location.lat = parseFloat(lat);
+    config.location.lon = parseFloat(lon);
+    saveConfig(config);
+
+    if (currentPortPath) connectToPort(currentPortPath);
+    updateTrayMenu(currentPortPath ? `Connected to ${currentPortPath}` : "Disconnected");
+  });
+}
 
 process.on("exit", stopWindowsBridge);
 process.on("SIGINT", () => {
@@ -161,10 +331,14 @@ app.whenReady().then(async () => {
     const iconPath = getTrayIconPath();
     tray = new Tray(iconPath);
     tray.setToolTip("TapTapPaw");
-    updateTrayMenu("Initializing...", null);
+    updateTrayMenu("Initializing...");
+    checkFirmwareUpdate();
     
     // Add click handler to open menu on left click
-    tray.on("click", () => tray.popUpContextMenu());
+    tray.on("click", async () => {
+      await updateTrayMenu(lastTrayStatus);
+      tray.popUpContextMenu();
+    });
     // Right click does nothing
      tray.on("right-click", () => {});
     console.log("Tray created successfully");
@@ -198,7 +372,7 @@ app.whenReady().then(async () => {
     }
 
     if (!autoConnected) {
-      updateTrayMenu("Select a port", ports);
+      updateTrayMenu("Select a port");
     }
   } catch (err) {
     console.error("Startup failure:", err);

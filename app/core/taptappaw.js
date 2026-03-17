@@ -32,32 +32,38 @@ const { getWeather, getGeoLocation } = require("./weather.js");
 const BAUD_RATE = 115200;
 let port;
 let queryLoopRunning = false;
-let stateUpdateTimers = []; // To hold interval timer IDs
+let stateUpdateTimers = []; // To hold interval timer IDs'
+let currentOptions = {};
 
 async function listPorts() {
   return await SerialPort.list();
 }
 
-function connectTo(path, onConnect, onError) {
+function connectTo(path, onConnect, onError, options) {
+  currentOptions = options || {};
   if (port && port.isOpen) {
     port.close((err) => {
       if (err) console.log("Error closing port:", err.message);
       performOpen(path, onConnect, onError);
     });
   } else {
-      performOpen(path, onConnect, onError);
+    performOpen(path, onConnect, onError);
   }
 }
 
 function disconnect(onDisconnect) {
   if (port && port.isOpen) {
     port.close((err) => {
-      if (err) console.log("Error closing port:", err.message);
+      if (err) {
+        console.log("Error closing port:", err.message);
+      }
       stopStateUpdateLoop();
+      currentOptions = {};
       if (onDisconnect) onDisconnect();
     });
   } else {
     stopStateUpdateLoop();
+    currentOptions = {};
     if (onDisconnect) onDisconnect();
   }
 }
@@ -433,8 +439,18 @@ function startStateUpdateLoop() {
   // 3. WEATHER CONDITION every 15 minutes
   const updateWeather = async () => {
     try {
-      const location = await getGeoLocation();
-      console.log(`📍 Got location via IP: Lat ${location.lat}, Lon ${location.lon}`);
+      let location;
+      const locationConfig = currentOptions.location || { mode: "auto" };
+
+      if (locationConfig.mode === "manual" && locationConfig.lat && locationConfig.lon) {
+        location = { lat: locationConfig.lat, lon: locationConfig.lon };
+        console.log(
+          `📍 Using manual location: Lat ${location.lat}, Lon ${location.lon}`,
+        );
+      } else {
+        location = await getGeoLocation();
+        console.log(`📍 Got location via IP: Lat ${location.lat}, Lon ${location.lon}`);
+      }
       const weather = await getWeather(location.lat, location.lon);
       sendWeather(weather);
     } catch (error) {
