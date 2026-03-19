@@ -236,6 +236,9 @@ void setup() {
   // init TFT
   tft.begin();
   tft.setBrightness(brightness);
+#ifdef CYD_CLASSIC
+  tft.invertDisplay(true);
+#endif // CYD_CLASSIC
 
   // screen calibration
   if (digitalRead(BUTTON_PIN) == LOW) {

@@ -18,8 +18,12 @@ class LGFX : public lgfx::LGFX_Device
   lgfx::Bus_SPI _bus_instance;
 
   // Provide touch screen parameters
+#ifdef CYD_PURPLE
   lgfx::Touch_FT5x06 _touch_instance;
-
+#endif // CYD_PURPLE
+#ifdef CYD_CLASSIC
+  lgfx::Touch_XPT2046 _touch_instance;
+#endif // CYD_CLASSIC
   // Provide backlight control parameters
   lgfx::Light_PWM _light_instance;
 
@@ -73,13 +77,22 @@ public:
   cfg.y_max = 320;
 
   cfg.pin_int = 36;        // if connected, else -1
-  cfg.bus_shared = false;  // VERY IMPORTANT
 
+#ifdef CYD_PURPLE
+  cfg.bus_shared = false;  // VERY IMPORTANT
   cfg.i2c_port = 0;
   cfg.i2c_addr = 0x38;     // default FT6X36 address
   cfg.pin_sda = 33;        // your Wire.begin SDA
   cfg.pin_scl = 32;        // your Wire.begin SCL
   cfg.freq = 400000;       // 400kHz
+#endif // CYD_PURPLE
+#ifdef CYD_CLASSIC
+  cfg.spi_host = VSPI_HOST;
+  cfg.pin_sclk = 25;
+  cfg.pin_mosi = 32;
+  cfg.pin_miso = 39;
+  cfg.pin_cs = 33;
+#endif // CYD_CLASSIC
 
   _touch_instance.config(cfg);
   _panel_instance.setTouch(&_touch_instance);
