@@ -3,13 +3,13 @@
 #include "esp32-hal.h"
 #include "ui/ui.h"
 
-#include <Preferences.h>
-Preferences pref;
 
+Preferences pref;
+bool flip = false;
 
 uint8_t volume = 80;
 bool sound_on = true;
-
+uint8_t rotation = 0;
 
 void initSpeaker() {
   uint16_t freq = 2000; // Hz
@@ -92,7 +92,13 @@ void led_color(bool r, bool g, bool b  ) {
 //------------- configuration
 void load_config() {
   pref.begin("config", false);
-
+ 
+  flip = pref.getBool("flip", false);
+  if (flip) {
+    lv_obj_add_state(ui_setting_Switch_rotate, LV_STATE_CHECKED);
+  } else {
+    lv_obj_clear_state(ui_setting_Switch_rotate, LV_STATE_CHECKED); 
+  }
   dim_brightness = pref.getUChar("dim_brightness", 30);
   brightness = pref.getUChar("brightness", 200);
   lv_slider_set_left_value(ui_setting_Slider_backlight , dim_brightness, LV_ANIM_OFF);
@@ -114,6 +120,7 @@ void load_config() {
 
 void save_config() {
   pref.begin("config", false);
+  pref.putBool("flip", flip);
   pref.putUChar("dim_brightness", dim_brightness);
   pref.putUChar("brightness", brightness);
   pref.putUChar("volume", volume);

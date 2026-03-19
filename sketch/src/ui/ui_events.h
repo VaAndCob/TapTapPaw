@@ -14,6 +14,8 @@ void setBrightness(lv_event_t * e);
 void setVolume(lv_event_t * e);
 void turnsoundon(lv_event_t * e);
 void turnsoundoff(lv_event_t * e);
+void rotateScreen(lv_event_t * e);
+void notRotateScreen(lv_event_t * e);
 void saveConfig(lv_event_t * e);
 
 #ifdef __cplusplus

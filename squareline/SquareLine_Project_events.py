@@ -34,3 +34,11 @@ def enableBluetooth(event_struct):
 def enableSerial(event_struct):
     return
 
+
+def rotateScreen(event_struct):
+    return
+
+
+def notRotateScreen(event_struct):
+    return
+

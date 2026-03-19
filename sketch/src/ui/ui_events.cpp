@@ -59,3 +59,20 @@ void turnsoundoff(lv_event_t * e)
 	clickSound();
 	sound_on = false;
 }
+
+void rotateScreen(lv_event_t * e)
+{
+	clickSound();
+  flip = true;
+  rotation = rotation + 2;
+  tft.setRotation(rotation);
+  lv_obj_invalidate(lv_scr_act());
+}
+
+void notRotateScreen(lv_event_t * e)
+{
+	flip = false;
+  rotation = rotation - 2;
+  tft.setRotation(rotation);
+  lv_obj_invalidate(lv_scr_act());
+}

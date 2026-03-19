@@ -14,7 +14,7 @@
 #include "app_config.h" //<- open this file in "include" folder to config compile option
 //-------------------------------------------------------
 #include <Arduino.h>
-const String version = "1.0.1 | " __DATE__ "-" __TIME__;
+const String version = "1.0.2 | " __DATE__ "-" __TIME__;
 //-------------------------------------------------------
 #include "LGFX_CYD.h"
 #include "ui/ui.h"
@@ -33,6 +33,7 @@ const String version = "1.0.1 | " __DATE__ "-" __TIME__;
 LGFX tft; /* LGFX instance */
 // variable
 uint16_t x, y;
+
 
 // Serial packet parsing
 static uint8_t packet[256];
@@ -213,7 +214,10 @@ void serial_parse(byte b) {
   connect_timer = millis(); // reset connection timer on serial activity
 }
 
+
+
 // ################### SETUP ############################
+
 void setup() {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); // disable brownout detection
   // init communication
@@ -233,15 +237,28 @@ void setup() {
   initSpeaker();
   led_color(1, 1, 1); // all off
 
-  // init TFT
+    // init TFT
   tft.begin();
   tft.setBrightness(brightness);
 
-  // screen calibration
+
+
+ #if (BOARD != USE_PURPLE_28_CAPACITIVE)
+  // screen calibration for resistive touch
+  uint16_t calData[8];
+  pref.begin("touch", false);
   if (digitalRead(BUTTON_PIN) == LOW) {
-    uint16_t calData[8];
     tft.calibrateTouch(calData, TFT_WHITE, TFT_BLACK, 15);
+    pref.putBytes("calData", calData, sizeof(calData));
+    Serial.println("Touch calibration saved.");
+  } else {
+    if (pref.getBytes("calData", calData, sizeof(calData)) == sizeof(calData)) {
+      tft.setTouchCalibrate(calData);
+      Serial.println("Touch calibration loaded.");
+    }
   }
+  pref.end();
+ #endif 
 
   const uint16_t screenWidth = tft.width();
   const uint16_t screenHeight = tft.height();
@@ -278,6 +295,15 @@ void setup() {
 
   // load config
   load_config();
+
+  //Screen rotation 
+#if (BOARD == USE_PURPLE_28_CAPACITIVE || BOARD == USE_CYD_28_1)
+  if (flip) rotation = 2; else rotation = 0;//rotation = 0; //or 2 rotate 180
+#else
+  if (flip) rotation = 6; else rotation = 4;//rotation = 4;// or 6 rotate 180
+#endif
+  tft.setRotation(rotation);
+ 
 
 } // setup
 

@@ -23,6 +23,8 @@ extern void ui_event_setting_Slider_volume( lv_event_t * e);
 extern lv_obj_t *ui_setting_Slider_volume;
 extern void ui_event_setting_Switch_sound( lv_event_t * e);
 extern lv_obj_t *ui_setting_Switch_sound;
+extern void ui_event_setting_Switch_rotate( lv_event_t * e);
+extern lv_obj_t *ui_setting_Switch_rotate;
 extern void ui_event_setting_Button_saveconfig( lv_event_t * e);
 extern lv_obj_t *ui_setting_Button_saveconfig;
 extern lv_obj_t *ui_setting_Label_Label2;

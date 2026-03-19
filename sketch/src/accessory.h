@@ -1,8 +1,9 @@
 #pragma once
 #include <Arduino.h>
-
+#include <Preferences.h>
 #include "LGFX_CYD.h"
 extern LGFX tft; /* LGFX instance */
+extern Preferences pref;
 
 #define BUTTON_PIN 0
 #define LDR_PIN 34
@@ -22,12 +23,13 @@ extern LGFX tft; /* LGFX instance */
 //-----------------------------
 extern uint8_t volume;
 extern bool sound_on;
-
-
+extern bool flip;
+extern uint8_t rotation;
 extern bool dim; // back light dim flag
 extern uint8_t dim_brightness;
 extern uint8_t brightness;
 //-----------------------------
+
 
 
 void initSpeaker();

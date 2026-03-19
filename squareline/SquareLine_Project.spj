@@ -4700,7 +4700,6 @@
               },
               {
                 "nid": 225,
-                "flags": 1048576,
                 "strtype": "OBJECT/Scrolling",
                 "InheritedType": 1
               },
@@ -4911,7 +4910,7 @@
                     "strtype": "OBJECT/Position",
                     "intarray": [
                       0,
-                      -24
+                      -59
                     ],
                     "InheritedType": 7
                   },
@@ -5255,7 +5254,7 @@
                     "strtype": "OBJECT/Position",
                     "intarray": [
                       0,
-                      27
+                      -5
                     ],
                     "InheritedType": 7
                   },
@@ -5599,7 +5598,7 @@
                     "strtype": "OBJECT/Position",
                     "intarray": [
                       180,
-                      175
+                      140
                     ],
                     "InheritedType": 7
                   },
@@ -5960,6 +5959,404 @@
                 "saved_objtypeKey": "SWITCH"
               },
               {
+                "guid": "GUID29851387-683039S79578",
+                "properties": [
+                  {
+                    "nid": 10,
+                    "strtype": "OBJECT/Name",
+                    "strval": "rotate",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 20,
+                    "strtype": "OBJECT/Layout",
+                    "InheritedType": 1
+                  },
+                  {
+                    "Flow": 0,
+                    "Wrap": false,
+                    "Reversed": false,
+                    "MainAlignment": 0,
+                    "CrossAlignment": 0,
+                    "TrackAlignment": 0,
+                    "LayoutType": 0,
+                    "nid": 30,
+                    "strtype": "OBJECT/Layout_type",
+                    "strval": "No_layout",
+                    "InheritedType": 13
+                  },
+                  {
+                    "nid": 40,
+                    "strtype": "OBJECT/Transform",
+                    "InheritedType": 1
+                  },
+                  {
+                    "nid": 50,
+                    "flags": 17,
+                    "strtype": "OBJECT/Position",
+                    "intarray": [
+                      181,
+                      177
+                    ],
+                    "InheritedType": 7
+                  },
+                  {
+                    "nid": 60,
+                    "flags": 17,
+                    "strtype": "OBJECT/Size",
+                    "intarray": [
+                      50,
+                      25
+                    ],
+                    "InheritedType": 7
+                  },
+                  {
+                    "nid": 70,
+                    "strtype": "OBJECT/Align",
+                    "strval": "TOP_LEFT",
+                    "InheritedType": 3
+                  },
+                  {
+                    "nid": 75,
+                    "strtype": "OBJECT/Extend_click_area",
+                    "InheritedType": 6
+                  },
+                  {
+                    "nid": 90,
+                    "flags": 1048576,
+                    "strtype": "OBJECT/Flags",
+                    "InheritedType": 1
+                  },
+                  {
+                    "nid": 100,
+                    "strtype": "SWITCH/Hidden",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 225,
+                    "flags": 1048576,
+                    "strtype": "OBJECT/Scrolling",
+                    "InheritedType": 1
+                  },
+                  {
+                    "nid": 300,
+                    "strtype": "OBJECT/Scrollbar_mode",
+                    "strval": "AUTO",
+                    "InheritedType": 3
+                  },
+                  {
+                    "nid": 310,
+                    "strtype": "OBJECT/Scroll_direction",
+                    "strval": "ALL",
+                    "InheritedType": 3
+                  },
+                  {
+                    "nid": 314,
+                    "strtype": "OBJECT/Scroll_snap_x",
+                    "strval": "NONE",
+                    "InheritedType": 3
+                  },
+                  {
+                    "nid": 315,
+                    "strtype": "OBJECT/Scroll_snap_y",
+                    "strval": "NONE",
+                    "InheritedType": 3
+                  },
+                  {
+                    "nid": 320,
+                    "flags": 1048576,
+                    "strtype": "OBJECT/States",
+                    "InheritedType": 1
+                  },
+                  {
+                    "part": "lv.PART.MAIN",
+                    "childs": [
+                      {
+                        "nid": 10000,
+                        "strtype": "_style/StyleState",
+                        "strval": "DEFAULT",
+                        "childs": [
+                          {
+                            "nid": 10520,
+                            "flags": 4096,
+                            "strtype": "_style/Bg_Color",
+                            "intarray": [
+                              0,
+                              0,
+                              0,
+                              100
+                            ],
+                            "InheritedType": 7
+                          },
+                          {
+                            "nid": 10810,
+                            "flags": 4096,
+                            "strtype": "_style/Outline_Color",
+                            "intarray": [
+                              0,
+                              0,
+                              0,
+                              255
+                            ],
+                            "InheritedType": 7
+                          },
+                          {
+                            "nid": 10820,
+                            "flags": 16,
+                            "strtype": "_style/Outline_params",
+                            "intarray": [
+                              1,
+                              0
+                            ],
+                            "InheritedType": 7
+                          }
+                        ],
+                        "InheritedType": 1
+                      }
+                    ],
+                    "nid": 1010,
+                    "strtype": "SWITCH/Style_main",
+                    "strval": "lv.PART.MAIN, Rectangle, Pad, Anim1, Transform",
+                    "InheritedType": 11
+                  },
+                  {
+                    "part": "lv.PART.INDICATOR",
+                    "childs": [
+                      {
+                        "nid": 20000,
+                        "strtype": "_style/StyleState",
+                        "strval": "CHECKED",
+                        "childs": [
+                          {
+                            "nid": 20520,
+                            "flags": 4096,
+                            "strtype": "_style/Bg_Color",
+                            "intarray": [
+                              109,
+                              223,
+                              176,
+                              255
+                            ],
+                            "InheritedType": 7
+                          },
+                          {
+                            "nid": 20530,
+                            "flags": 256,
+                            "strtype": "_style/Bg_gradiens_Color",
+                            "intarray": [
+                              20,
+                              42,
+                              37
+                            ],
+                            "InheritedType": 7
+                          },
+                          {
+                            "nid": 20550,
+                            "strtype": "_style/Gradient direction",
+                            "strval": "VER",
+                            "InheritedType": 3
+                          },
+                          {
+                            "nid": 20810,
+                            "flags": 4096,
+                            "strtype": "_style/Outline_Color",
+                            "intarray": [
+                              0,
+                              0,
+                              0,
+                              255
+                            ],
+                            "InheritedType": 7
+                          },
+                          {
+                            "nid": 20820,
+                            "flags": 16,
+                            "strtype": "_style/Outline_params",
+                            "intarray": [
+                              1,
+                              0
+                            ],
+                            "InheritedType": 7
+                          }
+                        ],
+                        "InheritedType": 1
+                      }
+                    ],
+                    "nid": 1020,
+                    "strtype": "SWITCH/Style_indicator",
+                    "strval": "lv.PART.INDICATOR, Rectangle",
+                    "InheritedType": 11
+                  },
+                  {
+                    "part": "lv.PART.KNOB",
+                    "childs": [
+                      {
+                        "nid": 10000,
+                        "strtype": "_style/StyleState",
+                        "strval": "DEFAULT",
+                        "childs": [
+                          {
+                            "nid": 10520,
+                            "flags": 4096,
+                            "strtype": "_style/Bg_Color",
+                            "intarray": [
+                              255,
+                              255,
+                              255,
+                              0
+                            ],
+                            "InheritedType": 7
+                          },
+                          {
+                            "nid": 10610,
+                            "strtype": "_style/Bg_Image",
+                            "strval": "assets/paw.png",
+                            "InheritedType": 5
+                          }
+                        ],
+                        "InheritedType": 1
+                      }
+                    ],
+                    "nid": 1030,
+                    "strtype": "SWITCH/Style_knob",
+                    "strval": "lv.PART.KNOB, Rectangle, Pad",
+                    "InheritedType": 11
+                  },
+                  {
+                    "disabled": false,
+                    "nid": 1000702,
+                    "strtype": "_event/EventHandler",
+                    "strval": "CHECKED(VALUE_CHANGED)",
+                    "childs": [
+                      {
+                        "nid": 1000703,
+                        "strtype": "_event/name",
+                        "strval": "Event7",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000704,
+                        "strtype": "_event/condition_C",
+                        "strval": "",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000705,
+                        "strtype": "_event/condition_P",
+                        "strval": "",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000706,
+                        "strtype": "_event/action",
+                        "strval": "CALL FUNCTION",
+                        "childs": [
+                          {
+                            "nid": 1000707,
+                            "strtype": "CALL FUNCTION/Name",
+                            "strval": "CALL FUNCTION",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 1000708,
+                            "strtype": "CALL FUNCTION/Call",
+                            "strval": "<{Function_name}>( event_struct )",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 1000709,
+                            "strtype": "CALL FUNCTION/CallC",
+                            "strval": "<{Function_name}>( e );",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 1000710,
+                            "strtype": "CALL FUNCTION/Function_name",
+                            "strval": "rotateScreen",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 1000711,
+                            "strtype": "CALL FUNCTION/Dont_export_function",
+                            "strval": "False",
+                            "InheritedType": 2
+                          }
+                        ],
+                        "InheritedType": 10
+                      }
+                    ],
+                    "InheritedType": 4
+                  },
+                  {
+                    "disabled": false,
+                    "nid": 1000718,
+                    "strtype": "_event/EventHandler",
+                    "strval": "UNCHECKED(VALUE_CHANGED)",
+                    "childs": [
+                      {
+                        "nid": 1000719,
+                        "strtype": "_event/name",
+                        "strval": "Event8",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000720,
+                        "strtype": "_event/condition_C",
+                        "strval": "",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000721,
+                        "strtype": "_event/condition_P",
+                        "strval": "",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1000722,
+                        "strtype": "_event/action",
+                        "strval": "CALL FUNCTION",
+                        "childs": [
+                          {
+                            "nid": 1000723,
+                            "strtype": "CALL FUNCTION/Name",
+                            "strval": "CALL FUNCTION",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 1000724,
+                            "strtype": "CALL FUNCTION/Call",
+                            "strval": "<{Function_name}>( event_struct )",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 1000725,
+                            "strtype": "CALL FUNCTION/CallC",
+                            "strval": "<{Function_name}>( e );",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 1000726,
+                            "strtype": "CALL FUNCTION/Function_name",
+                            "strval": "notRotateScreen",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 1000727,
+                            "strtype": "CALL FUNCTION/Dont_export_function",
+                            "strval": "True",
+                            "InheritedType": 2
+                          }
+                        ],
+                        "InheritedType": 10
+                      }
+                    ],
+                    "InheritedType": 4
+                  }
+                ],
+                "saved_objtypeKey": "SWITCH"
+              },
+              {
                 "guid": "GUID94256198-494648S53337560",
                 "children": [
                   {
@@ -6171,7 +6568,7 @@
                     "strtype": "OBJECT/Position",
                     "intarray": [
                       0,
-                      -11
+                      -7
                     ],
                     "InheritedType": 7
                   },
@@ -6508,7 +6905,6 @@
               },
               {
                 "nid": 225,
-                "flags": 1048576,
                 "strtype": "OBJECT/Scrolling",
                 "InheritedType": 1
               },
@@ -6556,7 +6952,7 @@
               {
                 "nid": 1030,
                 "strtype": "LABEL/Text",
-                "strval": "          [ Settings ]\\n -------------------------\\n TapTapPaw - Va&Cob\\n\\n            Backlight\\n\\n\\n              Volume\\n\\n\\n   Sound Effect",
+                "strval": "          [ Settings ]\\n--------------------------\\n            Backlight\\n\\n\\n              Volume\\n\\n\\n   Sound Effect\\n\\n Rotate Screen",
                 "InheritedType": 10
               },
               {
@@ -6615,9 +7011,26 @@
                           255,
                           255,
                           255,
-                          80
+                          100
                         ],
                         "InheritedType": 7
+                      },
+                      {
+                        "nid": 10530,
+                        "flags": 256,
+                        "strtype": "_style/Bg_gradiens_Color",
+                        "intarray": [
+                          222,
+                          194,
+                          148
+                        ],
+                        "InheritedType": 7
+                      },
+                      {
+                        "nid": 10550,
+                        "strtype": "_style/Gradient direction",
+                        "strval": "VER",
+                        "InheritedType": 3
                       },
                       {
                         "nid": 10710,
@@ -6656,6 +7069,18 @@
                         "intarray": [
                           3,
                           3
+                        ],
+                        "InheritedType": 7
+                      },
+                      {
+                        "nid": 11110,
+                        "flags": 4096,
+                        "strtype": "_style/Padding",
+                        "intarray": [
+                          0,
+                          0,
+                          5,
+                          0
                         ],
                         "InheritedType": 7
                       }
@@ -6975,6 +7400,18 @@
                 "strval": "DEFAULT",
                 "childs": [
                   {
+                    "nid": 10520,
+                    "flags": 4096,
+                    "strtype": "_style/Bg_Color",
+                    "intarray": [
+                      0,
+                      0,
+                      0,
+                      255
+                    ],
+                    "InheritedType": 7
+                  },
+                  {
                     "nid": 10610,
                     "strtype": "_style/Bg_Image",
                     "strval": "assets/wallpaper.png",
@@ -7089,7 +7526,7 @@
   },
   "animations": [],
   "selected_theme": "Default",
-  "selected_screen": "GUID16945586-423514S413553",
+  "selected_screen": "GUID68019690-935663S35841557",
   "info": {
     "name": "SquareLine_Project.spj",
     "depth": 2,
@@ -7117,7 +7554,7 @@
     "custom_variable_prefix": "uic",
     "separate_screen_save": false,
     "hierarchy_state_save": false,
-    "backup_cnt": 133,
+    "backup_cnt": 137,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "imagebytearrayprefix": "",
