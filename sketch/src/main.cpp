@@ -295,13 +295,15 @@ void setup() {
 
   // load config
   load_config();
-
+  if (flip) rotation = 2; else rotation = 0;
   //Screen rotation 
+/*  
 #if (BOARD == USE_PURPLE_28_CAPACITIVE || BOARD == USE_CYD_28_1)
   if (flip) rotation = 2; else rotation = 0;//rotation = 0; //or 2 rotate 180
 #else
   if (flip) rotation = 6; else rotation = 4;//rotation = 4;// or 6 rotate 180
 #endif
+*/
   tft.setRotation(rotation);
  
 

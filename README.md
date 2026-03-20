@@ -106,8 +106,11 @@ The firmware runs on an ESP32 and renders visuals using **LVGL**. It parses inco
 4. Connect ESP32 via USB
 5. Click **Upload** in PlatformIO
 
+(`For resistive touch screen only`) Touch screen calibration will be displayed during the first run, but can also be manually entered by pressing the RESET button and releasing, then pressing the BOOT (GPIO_0) button within one second and holding it for a second.
+
 ### Quick start, flash and go, no code needed
 [Flash Firmware Online](https://vaandcob.github.io/webpage/src/index.html?tab=taptappaw)
+
 
 ## 📡 Serial Protocol Overview
 Communication uses a lightweight binary protocol optimized for embedded devices.
