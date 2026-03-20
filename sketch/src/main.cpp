@@ -11,7 +11,7 @@
 // #define DEBUG_PACKET // Uncomment to enable serial packet debugging
 //  Library
 
-#include "app_config.h" //<- open this file in "include" folder to config compile option
+
 //-------------------------------------------------------
 #include <Arduino.h>
 const String version = "1.0.2 | " __DATE__ "-" __TIME__;
