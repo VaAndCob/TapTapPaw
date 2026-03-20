@@ -27,6 +27,7 @@ Behind the cuteness is a real-time hardware bridge, designed for boards like the
 * 🧸 **Cute UI** — Designed with playful animations using LVGL
 * 🔌 **Low-Latency Serial Link** — Efficient binary protocol over USB
 * 🌗 **Auto backlight**— Shifts brightness based on ambient light levels.
+* 🔄 **Screen Rotation** — Swtichable screen rotation 180 degree
 * 🔌 **Auto sleep** — Display will be automatically turned off after disconnected for 5 minutes
 
 ## 📂 Project Structure
@@ -106,7 +107,7 @@ The firmware runs on an ESP32 and renders visuals using **LVGL**. It parses inco
 5. Click **Upload** in PlatformIO
 
 ### Quick start, flash and go, no code needed
-[Flash Firmware Online](https://vaandcob.github.io/webpage/src/index.html)
+[Flash Firmware Online](https://vaandcob.github.io/webpage/src/index.html?tab=taptappaw)
 
 ## 📡 Serial Protocol Overview
 Communication uses a lightweight binary protocol optimized for embedded devices.
