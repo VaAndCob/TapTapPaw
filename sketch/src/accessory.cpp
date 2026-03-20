@@ -96,9 +96,13 @@ void load_config() {
   flip = pref.getBool("flip", false);
   if (flip) {
     lv_obj_add_state(ui_setting_Switch_rotate, LV_STATE_CHECKED);
+    rotation = 2;
   } else {
     lv_obj_clear_state(ui_setting_Switch_rotate, LV_STATE_CHECKED); 
+    rotation = 0;
   }
+  tft.setRotation(rotation);
+  
   dim_brightness = pref.getUChar("dim_brightness", 30);
   brightness = pref.getUChar("brightness", 200);
   lv_slider_set_left_value(ui_setting_Slider_backlight , dim_brightness, LV_ANIM_OFF);
