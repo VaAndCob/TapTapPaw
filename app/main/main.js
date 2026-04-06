@@ -60,7 +60,7 @@ function loadConfig() {
 
 function fetchJson(url, headers, timeoutMs = 8000) {
   return new Promise((resolve, reject) => {
-    console.log(`fetchJson: GET ${url}`);
+   
     const options = headers ? { headers } : undefined;
     const req = https.get(url, options, (res) => {
         console.log(`fetchJson: ${url} -> ${res.statusCode}`);
@@ -181,6 +181,10 @@ async function checkAppUpdate() {
 
 async function checkFirmwareUpdate() {
   try {
+    if (!currentPortPath) {
+      console.log("Firmware update check skipped: no serial port connected.");
+      return;
+    }
     const config = loadConfig();
     const currentVersion = config.firmwareVersion;
     console.log(`Firmware version check: current=${currentVersion || "unknown"}`);
@@ -246,9 +250,6 @@ async function updateTrayMenu(status) {
     : config.firmwareVersion
       ? `Firmware: ${config.firmwareVersion}`
       : "Firmware: Unknown";
-  console.log(
-    `Tray firmware label: ${firmwareLabel} (version=${config.firmwareVersion || "unknown"}, update=${config.firmwareUpdateAvailable ? "yes" : "no"})`,
-  );
 
   const loginSettings = app.getLoginItemSettings();
   const openAtLogin = loginSettings.openAtLogin;

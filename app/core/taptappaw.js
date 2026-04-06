@@ -1,5 +1,5 @@
 //-----------------------------------------
-console.log("Starting TapTapPaw 🐾");
+console.log("[Starting TapTapPaw]");
 let si;
 try {
   si = require("systeminformation");
@@ -134,7 +134,6 @@ async function setupSerialPort(onConnect, onError) {
   }
 }
 
-//setupSerialPort();
 
 function stopStateUpdateLoop() {
   if (!queryLoopRunning) return;
@@ -474,13 +473,10 @@ function requestFirmwareVersion(timeoutMs = 2000) {
 
     let buffer = "";
     const onData = (data) => {
-      console.log("Firmware response raw:", data);
       buffer += data.toString("utf8");
-      console.log("Firmware response buf:", buffer);
       const match = buffer.match(/(\d+\.\d+\.\d+)/);
       if (match) {
         cleanup();
-        console.log("Firmware version parsed:", match[1]);
         resolve(match[1]);
       }
     };
@@ -496,7 +492,7 @@ function requestFirmwareVersion(timeoutMs = 2000) {
     }, timeoutMs);
 
     port.on("data", onData);
-    console.log("Sending firmware version request: [0xff, 0x00]");
+    //console.log("Sending firmware version request: [0xff, 0x00]");
     port.write(Buffer.from([0xff, 0x00]), (err) => {
       if (err) {
         cleanup();
