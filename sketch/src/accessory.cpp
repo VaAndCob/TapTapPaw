@@ -21,6 +21,7 @@ void initSpeaker() {
 // playToneWithVolume(2000, 20, 200);  // 20% volume, 2000 Hz, 200ms
 void playToneWithVolume(uint16_t freq, uint8_t volumePercent, uint16_t duration) {
   if (!sound_on) return;
+
   // clamp volume between 0–100
   volumePercent = constrain(volumePercent, 0, 100);
   // convert percent to duty cycle
@@ -30,6 +31,7 @@ void playToneWithVolume(uint16_t freq, uint8_t volumePercent, uint16_t duration)
   ledcWrite(SPEAKER_CH, duty); // apply duty cycle (volume)
   delay(duration);
   ledcWrite(SPEAKER_CH, 0); // stop
+
 }
 
 void beepbeep() { // 2 shot beep
@@ -45,6 +47,8 @@ void beep() {
 void clickSound() {//keyboard click sound
  // initSpeaker();
   playToneWithVolume(8000, volume, 1);
+  
+
 }
 void offSound() {
  // initSpeaker();
@@ -132,3 +136,19 @@ void save_config() {
   pref.end();
   beep();
 }
+
+// init LittleFS
+void initLittleFS() {
+  if (!LittleFS.begin(false)) {
+    Serial.println("LittleFS mount failed. Formatting...");
+    if (!LittleFS.begin(true)) {
+      Serial.println("LittleFS format failed!");
+    } else {
+      Serial.println("LittleFS formatted successfully.");
+    }
+  } else {
+    Serial.println("LittleFS mounted successfully.");
+   
+  }
+}
+//--------------------------------------

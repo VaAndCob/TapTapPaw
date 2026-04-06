@@ -38,6 +38,9 @@ TapTapPaw/
 └── sketch/     # ESP32 firmware (PlatformIO + LVGL)
 ```
 
+## 📝 Version Log
+See `CHANGELOG.md`.
+
 ## 🖥️ Desktop Application (`app/`)
 The desktop app runs quietly in the system tray (Windows) or menu bar (macOS). It listens for global events and streams structured data to the ESP32 over USB serial.
 
@@ -118,6 +121,21 @@ Communication uses a lightweight binary protocol optimized for embedded devices.
 * Baud rate: **115200**
 * Start byte: `0xFF`
 * Length-prefixed payloads
+
+### Firmware Version Request (On Connect)
+
+Host sends a 2-byte ping to query the firmware version. The device responds with a plain-text version string over serial (e.g. `1.0.3`).
+
+**Request**
+
+| Byte | Field | Description      |
+| ---- | ----- | ---------------- |
+| 0    | START | `0xFF`           |
+| 1    | TYPE  | `0x00` (Version) |
+
+**Response**
+
+* ASCII text line: firmware version string (no binary framing)
 
 ### Status Packet (≈100 ms)
 

@@ -84,13 +84,8 @@ function performOpen(path, onConnect, onError) {
     console.log(`✅ Connected on ${path}`);
     if (onConnect) onConnect({ path });
 
-    if (!queryLoopRunning) {
-      // set time once on connect
+    if (!queryLoopRunning && !currentOptions.deferStart) {
       startStateUpdateLoop();
-      if (process.platform === "win32") {
-         startWindowsBridge();
-      }
-      queryLoopRunning = true;
     }
   });
 }
@@ -351,6 +346,11 @@ let cachedSysData = {
 
 // Main loop to poll system state and send it to the device
 function startStateUpdateLoop() {
+  if (queryLoopRunning) return;
+  if (process.platform === "win32") {
+    startWindowsBridge();
+  }
+  queryLoopRunning = true;
   const start_header = 0xff;
   const status_header = 0x01; // 0x01 indicates this packet contains system status
   const data_length = 9; // Number of bytes in the data packet (excluding start byte and length byte)
@@ -465,6 +465,47 @@ function startStateUpdateLoop() {
 
 } // startStateUpdate
 
+function requestFirmwareVersion(timeoutMs = 2000) {
+  return new Promise((resolve, reject) => {
+    if (!port || !port.isOpen) {
+      reject(new Error("Serial port not open"));
+      return;
+    }
+
+    let buffer = "";
+    const onData = (data) => {
+      console.log("Firmware response raw:", data);
+      buffer += data.toString("utf8");
+      console.log("Firmware response buf:", buffer);
+      const match = buffer.match(/(\d+\.\d+\.\d+)/);
+      if (match) {
+        cleanup();
+        console.log("Firmware version parsed:", match[1]);
+        resolve(match[1]);
+      }
+    };
+
+    const cleanup = () => {
+      clearTimeout(timer);
+      port.off("data", onData);
+    };
+
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error("Firmware version request timed out"));
+    }, timeoutMs);
+
+    port.on("data", onData);
+    console.log("Sending firmware version request: [0xff, 0x00]");
+    port.write(Buffer.from([0xff, 0x00]), (err) => {
+      if (err) {
+        cleanup();
+        reject(err);
+      }
+    });
+  });
+}
+
 //---------------------
 /*
 Music Packet Format:
@@ -533,4 +574,12 @@ function sendWeather(weather) {
 //------------------------------------
 
 //================================
-module.exports = { setupSerialPort, listPorts, connectTo, disconnect, stopWindowsBridge };
+module.exports = {
+  setupSerialPort,
+  listPorts,
+  connectTo,
+  disconnect,
+  stopWindowsBridge,
+  startStateUpdateLoop,
+  requestFirmwareVersion,
+};

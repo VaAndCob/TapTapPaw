@@ -1,5 +1,6 @@
 #pragma once
 #include <Arduino.h>
+#include <LittleFS.h>
 #include <Preferences.h>
 #include "LGFX_CYD.h"
 extern LGFX tft; /* LGFX instance */
@@ -37,6 +38,9 @@ void initSpeaker();
 // playToneWithVolume(2000, 20, 200);  // 20% volume, 2000 Hz, 200ms
 void playToneWithVolume(uint16_t freq, uint8_t volumePercent, uint16_t duration);
 
+void audioPauseForTone();
+void audioResumeAfterTone();
+
 void beepbeep();
 void beep();
 void clickSound();
@@ -51,3 +55,5 @@ void led_color(bool r, bool g, bool b  );
 //------------- configuration
 void load_config();
 void save_config();
+
+void initLittleFS();

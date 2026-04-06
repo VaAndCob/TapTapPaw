@@ -10,13 +10,22 @@ const {
 const path = require("path");
 const fs = require("fs");
 const https = require("https");
-const { listPorts, connectTo, disconnect, stopWindowsBridge } = require("../core/taptappaw");
+const {
+  listPorts,
+  connectTo,
+  disconnect,
+  stopWindowsBridge,
+  startStateUpdateLoop,
+  requestFirmwareVersion,
+} = require("../core/taptappaw");
 
 
 let tray = null;
 const CONFIG_PATH = path.join(app.getPath("userData"), "port-config.json");
 const FIRMWARE_MANIFEST_URL =
-  "https://raw.githubusercontent.com/VaAndCob/webpage/main/firmware/taptappaw/taptappaw_manifest.json";
+  "https://raw.githubusercontent.com/VaAndCob/webpage/main/firmware/taptappaw/taptappaw_purple_28_capacitive_manifest.json";
+const GITHUB_LATEST_RELEASE_URL =
+  "https://api.github.com/repos/vaandcob/taptappaw/releases/latest";
 let currentPortPath = null;
 let lastTrayStatus = "Initializing...";
 
@@ -49,10 +58,12 @@ function loadConfig() {
   return {};
 }
 
-function fetchJson(url) {
+function fetchJson(url, headers, timeoutMs = 8000) {
   return new Promise((resolve, reject) => {
-    https
-      .get(url, (res) => {
+    console.log(`fetchJson: GET ${url}`);
+    const options = headers ? { headers } : undefined;
+    const req = https.get(url, options, (res) => {
+        console.log(`fetchJson: ${url} -> ${res.statusCode}`);
         if (res.statusCode !== 200) {
           res.resume();
           reject(new Error(`HTTP ${res.statusCode}`));
@@ -70,8 +81,13 @@ function fetchJson(url) {
             reject(e);
           }
         });
-      })
-      .on("error", reject);
+      });
+
+    req.on("error", reject);
+    req.setTimeout(timeoutMs, () => {
+      console.error(`fetchJson: ${url} -> timeout after ${timeoutMs}ms`);
+      req.destroy(new Error("Request timed out"));
+    });
   });
 }
 
@@ -93,19 +109,103 @@ function isNewerVersion(latest, current) {
   return false;
 }
 
+function normalizeVersion(version) {
+  if (version === null || version === undefined) return "";
+  return String(version).trim().replace(/^v/i, "");
+}
+
+function buildDownloadUrl(tagName) {
+  const tag = String(tagName || "").trim();
+  if (!tag) return null;
+
+  if (process.platform === "darwin") {
+    return `https://github.com/VaAndCob/TapTapPaw/releases/download/${tag}/TapTapPaw-${tag.replace(/^v/i, "")}-arm64.dmg`;
+  }
+  if (process.platform === "win32") {
+    return `https://github.com/VaAndCob/TapTapPaw/releases/download/${tag}/TapTapPaw.Setup.${tag.replace(/^v/i, "")}.exe`;
+  }
+  return null;
+}
+
+async function checkAppUpdate() {
+  try {
+    const currentVersion = normalizeVersion(app.getVersion());
+    console.log(`App version check: current=${currentVersion}`);
+
+    const release = await fetchJson(GITHUB_LATEST_RELEASE_URL, {
+      "User-Agent": "TapTapPaw",
+      Accept: "application/vnd.github+json",
+    });
+    const latestTag = release?.tag_name;
+    const latestVersion = normalizeVersion(latestTag);
+
+    if (!latestVersion) {
+      console.warn("GitHub release missing tag_name.");
+      return;
+    }
+    console.log(`App version check: latest=${latestVersion} (tag ${latestTag})`);
+
+    if (isNewerVersion(latestVersion, currentVersion)) {
+      const downloadUrl = buildDownloadUrl(latestTag);
+      const platformLabel =
+        process.platform === "darwin"
+          ? "macOS Apple Silicon"
+          : process.platform === "win32"
+            ? "Windows x64"
+            : "your platform";
+
+      const result = await dialog.showMessageBox({
+        type: "info",
+        buttons: ["Open Download Page", "OK"],
+        defaultId: 0,
+        cancelId: 1,
+        title: "Update Available",
+        message: "A newer TapTapPaw app version is available.",
+        detail: `Current: ${currentVersion}\nLatest: ${latestVersion}\n\nDownload (${platformLabel})`,
+      });
+
+      if (result.response === 0) {
+        if (downloadUrl) {
+          await shell.openExternal(downloadUrl);
+        } else {
+          await shell.openExternal("https://github.com/VaAndCob/TapTapPaw/releases/latest");
+        }
+      }
+    } else {
+      console.log("No app update available.");
+    }
+  } catch (err) {
+    console.error("App update check failed:", err);
+  }
+}
+
 async function checkFirmwareUpdate() {
   try {
     const config = loadConfig();
-    const currentVersion = config.firmwareVersion || app.getVersion();
+    const currentVersion = config.firmwareVersion;
+    console.log(`Firmware version check: current=${currentVersion || "unknown"}`);
+    if (!currentVersion) {
+      console.warn("Firmware version not available yet.");
+      return;
+    }
 
-    const manifest = await fetchJson(FIRMWARE_MANIFEST_URL);
+    const manifest = await fetchJson(FIRMWARE_MANIFEST_URL, {
+      "User-Agent": "TapTapPaw",
+      Accept: "application/json",
+    });
     const latestVersion = manifest?.version;
+    console.log(`Firmware version check: latest=${latestVersion || "unknown"}`);
     if (!latestVersion) {
       console.warn("Firmware manifest missing version.");
       return;
     }
 
     if (isNewerVersion(latestVersion, currentVersion)) {
+      saveConfig({
+        ...config,
+        firmwareUpdateAvailable: true,
+        latestFirmwareVersion: latestVersion,
+      });
       const result = await dialog.showMessageBox({
         type: "info",
         buttons: ["Open Download Page", "OK"],
@@ -116,10 +216,17 @@ async function checkFirmwareUpdate() {
         detail: `Current: ${currentVersion}\nLatest: ${latestVersion}\n\nDownload instructions:\n1. Open the download page.\n2. Select the TapTapPaw tab.`,
       });
       if (result.response === 0) {
-        await shell.openExternal("https://vaandcob.github.io/webpage/src/index.html");
+        await shell.openExternal("https://vaandcob.github.io/webpage/src/index.html?tab=taptappaw");
       }
+      updateTrayMenu(lastTrayStatus);
     } else {
+      saveConfig({
+        ...config,
+        firmwareUpdateAvailable: false,
+        latestFirmwareVersion: latestVersion,
+      });
       console.log("No firmware update available.");
+      updateTrayMenu(lastTrayStatus);
     }
   } catch (err) {
     console.error("Firmware update check failed:", err);
@@ -133,6 +240,15 @@ async function updateTrayMenu(status) {
   const version = app.getVersion();
   const config = loadConfig();
   const locationMode = config.location?.mode || "auto";
+  const latestFirmwareVersion = config.latestFirmwareVersion || "unknown";
+  const firmwareLabel = config.firmwareUpdateAvailable
+    ? `Firmware: Update Available! (${latestFirmwareVersion})`
+    : config.firmwareVersion
+      ? `Firmware: ${config.firmwareVersion}`
+      : "Firmware: Unknown";
+  console.log(
+    `Tray firmware label: ${firmwareLabel} (version=${config.firmwareVersion || "unknown"}, update=${config.firmwareUpdateAvailable ? "yes" : "no"})`,
+  );
 
   const loginSettings = app.getLoginItemSettings();
   const openAtLogin = loginSettings.openAtLogin;
@@ -151,8 +267,17 @@ async function updateTrayMenu(status) {
         await shell.openExternal("https://github.com/VaAndCob/taptappaw");
         }
      },
+     {
+       label: firmwareLabel,
+       enabled: true,
+       click: async () => {
+         if (config.firmwareUpdateAvailable) {
+           await shell.openExternal("https://vaandcob.github.io/webpage/src/index.html?tab=taptappaw");
+         }
+       },
+     },
     { type: "separator" },
-    { id: "portStatus", label: "STATUS - " + status, enabled: false },
+    { id: "portStatus", label: "STATUS - " + status, enabled: true },
     {
       label: "Select Port",
       submenu: portItems.length > 0 ? portItems : [{ label: "No ports found", enabled: false }],
@@ -214,16 +339,31 @@ async function updateTrayMenu(status) {
 }
 
 function connectToPort(portPath) {
+  checkAppUpdate();
   updateTrayMenu(`Connecting to ${portPath}...`);
   const config = loadConfig();
 
   connectTo(
     portPath,
-    (portInfo) => {
+    async (portInfo) => {
       currentPortPath = portPath;
       const newConfig = { ...config, lastPort: portPath };
       saveConfig(newConfig);
       updateTrayMenu(`Connected to ${portPath}`);
+      try {
+        const firmwareVersion = await requestFirmwareVersion();
+        const nextConfig = {
+          ...loadConfig(),
+          firmwareVersion,
+        };
+        saveConfig(nextConfig);
+        updateTrayMenu(`Connected to ${portPath}`);
+        await checkFirmwareUpdate();
+      } catch (err) {
+        console.error("Firmware version read failed:", err.message);
+      } finally {
+        startStateUpdateLoop();
+      }
     },
     (error) => {
       currentPortPath = null;
@@ -233,7 +373,7 @@ function connectToPort(portPath) {
         error?.message || "Unknown serial error",
       );
     },
-    { location: config.location },
+    { location: config.location, deferStart: true },
   );
 }
 
@@ -332,7 +472,7 @@ app.whenReady().then(async () => {
     tray = new Tray(iconPath);
     tray.setToolTip("TapTapPaw");
     updateTrayMenu("Initializing...");
-    checkFirmwareUpdate();
+   // checkFirmwareUpdate();
     
     // Add click handler to open menu on left click
     tray.on("click", async () => {

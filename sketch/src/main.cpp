@@ -6,15 +6,15 @@
  *
  * Hardware: CYD 2.8" ESP32 Dev Board
  * IDE: PlatformIO
- * Partition scheme: Miminal SPIFFS(1.9 MB App with OTA/ 190KB SPIFFS)
+ * Partition scheme: Custom LittleFS (1.75 MB App with OTA / 300KB LittleFS)
  */
 // #define DEBUG_PACKET // Uncomment to enable serial packet debugging
 //  Library
 
-
 //-------------------------------------------------------
 #include <Arduino.h>
-const String version = "1.0.2 | " __DATE__ "-" __TIME__;
+const char *firmware_version = "1.0.3";
+const String version = String(firmware_version) + " | " __DATE__ "-" __TIME__;
 //-------------------------------------------------------
 #include "LGFX_CYD.h"
 #include "ui/ui.h"
@@ -23,17 +23,34 @@ const String version = "1.0.2 | " __DATE__ "-" __TIME__;
 
 #include "accessory.h"
 #include "animation.h"
+
+//-------------------------------------------------------
+#include "audio/I2SAudio.h"
+#include "audio/WAVFileReader.h"
+#include <driver/dac.h>
+#include <driver/gpio.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/queue.h>
+#include <freertos/task.h>
+DACOutput *output = nullptr;
+static bool audio_i2s_active = false;
+static uint32_t audio_last_sample_rate = 0;
+typedef struct {
+  char path[64];
+} AudioRequest;
+static QueueHandle_t audio_queue = nullptr;
+static TaskHandle_t audio_task_handle = nullptr;
+static volatile bool audio_playing = false;
 //-------------------------------------------------------
 
 #define TFT_WIDTH 320
 #define TFT_HEIGHT 240
-#define CONNECTION_TIMEOUT 2000  //serial connection timeout in ms
-#define SLEEPMODE_TIMEOUT 5*60*1000 //put display to sleep after disconnect for 5 min
+#define CONNECTION_TIMEOUT 2000 // serial connection timeout in ms
+#define SLEEPMODE_TIMEOUT 5 * 60 * 1000 // put display to sleep after disconnect for 5 min
 
 LGFX tft; /* LGFX instance */
 // variable
 uint16_t x, y;
-
 
 // Serial packet parsing
 static uint8_t packet[256];
@@ -47,7 +64,107 @@ bool last_connected_state = true;
 
 const lv_img_dsc_t weather_icon[6] = {ui_img_sun_png, ui_img_cloud_png, ui_img_rain_png, ui_img_storm_png, ui_img_snow_png, ui_img_moon_png};
 
+//-----------------------------------
+static void audioTask(void *param) {
+  const int buffer_size = 512;
+  int16_t buffer[buffer_size];
+  AudioRequest req;
 
+  for (;;) {
+    if (xQueueReceive(audio_queue, &req, portMAX_DELAY) != pdTRUE) {
+      continue;
+    }
+
+    AudioRequest pending;
+    bool has_pending = false;
+
+    FILE *fp = fopen(req.path, "rb");
+    if (!fp) {
+      continue;
+    }
+
+    WAVFileReader *reader = new WAVFileReader(fp);
+
+    // Fully reset audio output each play to avoid driver leftovers
+    if (output) {
+      output->stop();
+      delete output;
+      output = nullptr;
+    }
+    dac_output_disable(DAC_CHANNEL_2);
+    gpio_reset_pin(GPIO_NUM_26);
+    // Release LEDC on speaker pin before enabling DAC (GPIO26)
+    ledcWrite(SPEAKER_CH, 0);
+    ledcDetachPin(SPEAKER_PIN);
+    output = new DACOutput();
+    output->start(reader->sample_rate());
+    audio_last_sample_rate = reader->sample_rate();
+    audio_i2s_active = true;
+    audio_playing = true;
+
+    while (true) {
+      int read = reader->read(buffer, buffer_size);
+      if (read > 0) {
+        uint8_t vol = volume;
+        if (vol > 100) {
+          vol = 100;
+        }
+        if (vol < 100) {
+          for (int i = 0; i < read; i++) {
+            int32_t s = (int32_t)buffer[i] * vol / 100;
+            if (s > 32767) {
+              s = 32767;
+            } else if (s < -32768) {
+              s = -32768;
+            }
+            buffer[i] = (int16_t)s;
+          }
+        }
+        output->write(buffer, read);
+      } else {
+        break;
+      }
+
+      AudioRequest tmp;
+      if (xQueueReceive(audio_queue, &tmp, 0) == pdTRUE) {
+        pending = tmp;
+        has_pending = true;
+      }
+      vTaskDelay(1);
+    }
+
+    if (output && audio_i2s_active) {
+      output->stop();
+      delete output;
+      output = nullptr;
+      audio_i2s_active = false;
+      dac_output_disable(DAC_CHANNEL_2);
+      gpio_reset_pin(GPIO_NUM_26);
+    }
+    // Restore LEDC tone output after DAC playback
+    vTaskDelay(5);
+    initSpeaker();
+    vTaskDelay(5);
+
+    fclose(fp);
+    delete reader;
+    audio_playing = false;
+
+    if (has_pending) {
+      xQueueOverwrite(audio_queue, &pending);
+    }
+  }
+}
+
+void playAudio(const char *filename) {
+  if (!audio_queue || !sound_on) {
+    return;
+  }
+  AudioRequest req;
+  snprintf(req.path, sizeof(req.path), "/littlefs/%s", filename);
+  req.path[sizeof(req.path) - 1] = '\0';
+  xQueueOverwrite(audio_queue, &req);
+}
 //-----------------------------------------
 
 void my_disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p) {
@@ -95,6 +212,16 @@ void serial_parse(byte b) {
     return;
   }
 
+  // Firmware version request: [0xFF][0x00]
+  if (packetIndex == 2 && packet[0] == 0xFF && packet[1] == 0x00) {
+    Serial.println(firmware_version);
+    packetIndex = 0;
+    packetLength = 0;
+    connect_timer = millis();
+    led_color(0, 0, 0); // green on to serial connected
+    return;
+  }
+
   // Determine packet length once we have enough info (at least 3 bytes).
   // This is only done once per packet.
   if (packetLength == 0 && packetIndex >= 3) {
@@ -125,6 +252,7 @@ void serial_parse(byte b) {
     snprintf(packetdata, sizeof(packetdata), "%d %d %d %d %d %d %d %d %d %d %d %d %d", packet[0], packet[1], packet[2], packet[3], packet[4], packet[5], packet[6], packet[7], packet[8], packet[9], packet[10]); //"/ Convert bytes to string and store in packetdata
     lv_textarea_set_text(ui_setting_Textarea_message, packetdata); // Display raw packet data in the debug textarea
 #endif
+
     // System Status Packet
     if (packet[1] == 0x01) {
 
@@ -143,6 +271,7 @@ void serial_parse(byte b) {
       // keyboard tapping animation
       if (keyDown != last_keyDown) {
         clickSound();
+
         if (!keyDown) {
           lv_obj_clear_flag(ui_main_Image_rightpawdown, LV_OBJ_FLAG_HIDDEN);
           lv_obj_add_flag(ui_main_Image_rightpawup, LV_OBJ_FLAG_HIDDEN);
@@ -188,23 +317,22 @@ void serial_parse(byte b) {
       // Update the UI with the new track information
       media_track_status(title, artist);
 
-     //packet  type is 0x03 (weather)
-     } else if (packet[1] == 0x03) {
+      // packet  type is 0x03 (weather)
+    } else if (packet[1] == 0x03) {
       uint8_t weather_group = packet[3]; // weather_group (0-4)
       String temp_c = String(packet[4]);
       String humidity = String(packet[5]);
-      
+
       char time_str[6]; // HH:MM + null
       snprintf(time_str, sizeof(time_str), "%02d:%02d", packet[6], packet[7]);
 
-      if (weather_group == 0 && packet[6] >= 18 || packet[6] < 6) weather_group = 5;//moon
-       
+      if (weather_group == 0 && packet[6] >= 18 || packet[6] < 6) weather_group = 5; // moon
+
       if (weather_group >= 0 && weather_group < 6) {
         lv_img_set_src(ui_main_Image_weatherIcon, &weather_icon[weather_group]);
       }
       String weather_info = temp_c + "°C\n" + humidity + "%\n" + time_str;
       lv_label_set_text(ui_main_Label_forecast, weather_info.c_str());
-      
 
     } // else packet  type is 0x02 (music), which is handled above
     // Reset packet index for next frame
@@ -213,8 +341,6 @@ void serial_parse(byte b) {
   }
   connect_timer = millis(); // reset connection timer on serial activity
 }
-
-
 
 // ################### SETUP ############################
 
@@ -225,6 +351,13 @@ void setup() {
   Serial.setRxBufferSize(2048);
   Serial.begin(115200);
 
+  initLittleFS();
+  audio_queue = xQueueCreate(1, sizeof(AudioRequest));
+  if (audio_queue) {
+    xTaskCreatePinnedToCore(audioTask, "audioTask", 4 * 1024, nullptr, 0, &audio_task_handle, 0);
+  } else {
+    Serial.println("Audio queue create failed");
+  }
   // pin configuration
   analogSetAttenuation(ADC_0db); // 0dB(1.0 ครั้ง) 0~800mV   for LDR
   pinMode(LDR_PIN, ANALOG); // ldr analog input read brightness
@@ -237,13 +370,11 @@ void setup() {
   initSpeaker();
   led_color(1, 1, 1); // all off
 
-    // init TFT
+  // init TFT
   tft.begin();
   tft.setBrightness(brightness);
 
-
-
- #if (BOARD != USE_PURPLE_28_CAPACITIVE)
+#if (BOARD != USE_PURPLE_28_CAPACITIVE)
   // screen calibration for resistive touch
   uint16_t calData[8];
   pref.begin("touch", false);
@@ -258,7 +389,7 @@ void setup() {
     }
   }
   pref.end();
- #endif 
+#endif
 
   const uint16_t screenWidth = tft.width();
   const uint16_t screenHeight = tft.height();
@@ -290,12 +421,10 @@ void setup() {
   // App start here
   ui_init(); // start ui and display
   lv_label_set_text(ui_main_Label_charge, LV_SYMBOL_CHARGE);
-  lv_label_set_text(ui_setting_Label_version , version.c_str());
-
+  lv_label_set_text(ui_setting_Label_version, version.c_str());
 
   // load config
   load_config();
-
 
 } // setup
 
@@ -342,23 +471,27 @@ void loop() {
       }
       lv_obj_set_style_text_color(ui_main_Label_connection, lv_color_hex(0xFFFF00), LV_PART_MAIN);
       lv_label_set_text(ui_main_Label_connection, LV_SYMBOL_WARNING);
-      beep();
+      // beep();
+      playAudio("disconnect.wav");
     } else { // serial connected
       tft.wakeup();
       tft.writeCommand(0x29);
-      if (!dim) tft.setBrightness(brightness);
-      else tft.setBrightness(dim_brightness);
+      if (!dim)
+        tft.setBrightness(brightness);
+      else
+        tft.setBrightness(dim_brightness);
 
       led_color(1, 0, 1); // green on to serial connected
       lv_obj_set_style_text_color(ui_main_Label_connection, lv_color_hex(0x00FF00), LV_PART_MAIN);
       lv_label_set_text(ui_main_Label_connection, LV_SYMBOL_USB);
-      beepbeep();
+      // beepbeep();
+      playAudio("connect.wav");
     }
     last_connected_state = app_connected;
   }
-  //put to sleep mode
+  // put to sleep mode
   if (!app_connected && millis() - connect_timer > SLEEPMODE_TIMEOUT) {
-    tft.writeCommand(0x28);  // display off
+    tft.writeCommand(0x28); // display off
     tft.sleep();
     tft.setBrightness(0); // turn off backlight
   }
