@@ -62,6 +62,8 @@ The desktop app runs quietly in the system tray (Windows) or menu bar (macOS). I
 
    * System Settings → Privacy & Security
 4. Launch the app and select the ESP32 serial port
+5. Incase there is pop-up "“TapTapPaw.app” is damaged and can’t be opened. You should move it to the Trash."
+   to fix this , open the terminal and run this command "sudo xattr -rd com.apple.quarantine /Applications/TapTapPaw.app"
 
 [Download macOS Apple Silicon](https://github.com/VaAndCob/TapTapPaw/releases/download/v1.0.2/TapTapPaw-1.0.2-arm64.dmg)
 
