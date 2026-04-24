@@ -39,7 +39,7 @@ TapTapPaw/
 ```
 
 ## 📝 Version Log
-See `CHANGELOG.md`.
+### See [changelog](CHANGELOG.md)
 
 ## 🖥️ Desktop Application (`app/`)
 The desktop app runs quietly in the system tray (Windows) or menu bar (macOS). It listens for global events and streams structured data to the ESP32 over USB serial.

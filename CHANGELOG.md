@@ -6,6 +6,11 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-04-24
+### Changed
+- High cpu usage on windows client app fixed.
+- No change on macOS silicon
+
 ## [1.0.3] - 2026-02-24
 ### Added
 - Firmware version check packet (host sends 0xFF 0x00; device replies with version string).
