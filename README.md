@@ -68,7 +68,7 @@ The desktop app runs quietly in the system tray (Windows) or menu bar (macOS). I
    
     "sudo xattr -rd com.apple.quarantine /Applications/TapTapPaw.app"
 
-[Download macOS Apple Silicon](https://github.com/VaAndCob/TapTapPaw/releases/download/v1.0.2/TapTapPaw-1.0.2-arm64.dmg)
+[Download macOS Apple Silicon](https://github.com/VaAndCob/TapTapPaw/releases/download/1.0.4/TapTapPaw-1.0.4-arm64.dmg)
 
 #### Windows
 1. Download the latest `.exe` installer from **Releases**
@@ -76,7 +76,7 @@ The desktop app runs quietly in the system tray (Windows) or menu bar (macOS). I
 3. Launch TapTapPaw from the system tray
 4. Select your ESP32 serial port
 
-[Download Windows x64](https://github.com/VaAndCob/TapTapPaw/releases/download/v1.0.2/TapTapPaw.Setup.1.0.2.exe)
+[Download Windows x64](https://github.com/VaAndCob/TapTapPaw/releases/download/1.0.4/TapTapPaw.Setup.1.0.4.exe)
 
 ---
 
