@@ -9,6 +9,9 @@ bool flip = false;
 
 //---------------- Sounding -------------------------
 
+bool invert_flip = INVERT_COLORS_DEFAULT;
+bool use_fahrenheit = USE_FAHRENHEIT_DEFAULT;
+
 uint8_t volume = 80;
 bool sound_on = true;
 uint8_t rotation = 0;
@@ -125,6 +128,17 @@ void load_config() {
     lv_obj_clear_state(ui_setting_Switch_sound      , LV_STATE_CHECKED);
   } 
 
+  invert_flip = pref.getBool("invert", INVERT_COLORS_DEFAULT);
+  use_fahrenheit = pref.getBool("fahr", USE_FAHRENHEIT_DEFAULT);
+  tft.invertDisplay(invert_flip); // XOR with the panel's default inversion (LovyanGFX Panel_LCD::setInvert)
+
+  pref.end();
+}
+
+void save_display_prefs() {
+  pref.begin("config", false);
+  pref.putBool("invert", invert_flip);
+  pref.putBool("fahr", use_fahrenheit);
   pref.end();
 }
 
@@ -135,9 +149,48 @@ void save_config() {
   pref.putUChar("brightness", brightness);
   pref.putUChar("volume", volume);
   pref.putBool("sound_on", sound_on); 
+  pref.putBool("invert", invert_flip);
+  pref.putBool("fahr", use_fahrenheit);
   pref.end();
   beep();
 }
+
+//--------------- physical keys (MX switches) --------------
+// Each switch connects one GPIO to GND. Internal pull-up keeps the pin HIGH; pressed = LOW.
+#if KEYS_ENABLED
+static const int8_t key_pins[] = {KEY1_PIN, KEY2_PIN, KEY3_PIN};
+static const uint8_t NUM_KEYS = sizeof(key_pins) / sizeof(key_pins[0]);
+static bool key_down[NUM_KEYS];
+static uint32_t key_changed_at[NUM_KEYS];
+
+void keys_init() {
+  for (uint8_t i = 0; i < NUM_KEYS; i++) {
+    key_down[i] = false;
+    key_changed_at[i] = 0;
+    if (key_pins[i] < 0) continue;
+    // GPIO 34-39 are input-only and have no internal pull-up: use an external resistor there.
+    pinMode(key_pins[i], key_pins[i] >= 34 ? INPUT : INPUT_PULLUP);
+  }
+}
+
+bool keys_pressed() {
+  bool pressed = false;
+  uint32_t now = millis();
+  for (uint8_t i = 0; i < NUM_KEYS; i++) {
+    if (key_pins[i] < 0) continue;
+    bool down = (digitalRead(key_pins[i]) == LOW);
+    if (down != key_down[i] && (now - key_changed_at[i]) > KEY_DEBOUNCE_MS) {
+      key_changed_at[i] = now;
+      key_down[i] = down;
+      if (down) pressed = true; // report press edge only
+    }
+  }
+  return pressed;
+}
+#else
+void keys_init() {}
+bool keys_pressed() { return false; }
+#endif
 
 //--------------- LittleFS for LVGL --------------
 //init lvgl littlefs drive S:

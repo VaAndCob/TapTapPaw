@@ -9,7 +9,6 @@
     "test": "node main/dev-run.js",
     "dev": "electron .",
     "rebuild": "electron-rebuild",
-    "postinstall": "electron-rebuild",
     "build": "electron-builder",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac"

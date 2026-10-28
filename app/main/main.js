@@ -17,6 +17,7 @@ const {
   stopWindowsBridge,
   startStateUpdateLoop,
   requestFirmwareVersion,
+  setDeviceSettings,
 } = require("../core/taptappaw");
 
 
@@ -244,6 +245,7 @@ async function updateTrayMenu(status) {
   const version = app.getVersion();
   const config = loadConfig();
   const locationMode = config.location?.mode || "auto";
+  const deviceSettings = config.deviceSettings || { fahrenheit: false, invert: false };
   const latestFirmwareVersion = config.latestFirmwareVersion || "unknown";
   const firmwareLabel = config.firmwareUpdateAvailable
     ? `Firmware: Update Available! (${latestFirmwareVersion})`
@@ -316,6 +318,20 @@ async function updateTrayMenu(status) {
     },
     { type: "separator" },
     {
+      label: "🌡 Temperature Unit",
+      submenu: [
+        { label: "Celsius (°C)", type: "radio", checked: !deviceSettings.fahrenheit, click: () => updateDeviceSettings({ fahrenheit: false }) },
+        { label: "Fahrenheit (°F)", type: "radio", checked: !!deviceSettings.fahrenheit, click: () => updateDeviceSettings({ fahrenheit: true }) },
+      ],
+    },
+    {
+      label: "🎨 Invert Display Colors (fix negative colors)",
+      type: "checkbox",
+      checked: !!deviceSettings.invert,
+      click: (item) => updateDeviceSettings({ invert: item.checked }),
+    },
+    { type: "separator" },
+    {
       label: "🖥 Run on Startup",
       type: "checkbox",
       checked: openAtLogin,
@@ -334,6 +350,14 @@ async function updateTrayMenu(status) {
   ]);
 
   tray.setContextMenu(contextMenu);
+}
+
+function updateDeviceSettings(partial) {
+  const config = loadConfig();
+  config.deviceSettings = { fahrenheit: false, invert: false, ...config.deviceSettings, ...partial };
+  saveConfig(config);
+  setDeviceSettings(config.deviceSettings); // sent to the device now and on every reconnect
+  updateTrayMenu(currentPortPath ? `Connected to ${currentPortPath}` : "Disconnected");
 }
 
 function connectToPort(portPath) {
@@ -360,6 +384,7 @@ function connectToPort(portPath) {
       } catch (err) {
         console.error("Firmware version read failed:", err.message);
       } finally {
+        setDeviceSettings(loadConfig().deviceSettings || {});
         startStateUpdateLoop();
       }
     },

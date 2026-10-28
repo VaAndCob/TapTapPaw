@@ -611,8 +611,8 @@ function sendWeather(weather) {
   const weather_header = 0x03; // 0x03 weather packet
   const data_length = 5; // weather_group, temp_c, humid, time_h, time_m
   const weather_group = weather.weather_group;
-  const temp_c = weather.temp_c;
-  const humid = weather.humidity;
+  const temp_c = weather.temp_c & 0xff; // keep two's complement so sub-zero temps survive the byte
+  const humid = weather.humidity & 0xff;
   const date = new Date(weather.observed_at);
   const time_h = date.getHours();
   const time_m = date.getMinutes();
@@ -627,7 +627,33 @@ function sendWeather(weather) {
   }
 }
 
+/*
+Settings Packet Format:
+[0xFF] [0x04] [len=1] [flags]
+flags bit0 = Fahrenheit, bit1 = flip the display's default color inversion
+*/
+// null until the user changes a toggle in the tray menu, so firmware defaults (app_config.h) are not overridden.
+let deviceSettings = null;
+
+function sendSettings() {
+  if (!deviceSettings) return;
+  const flags = (deviceSettings.fahrenheit ? 0x01 : 0) | (deviceSettings.invert ? 0x02 : 0);
+  const packet = Buffer.from([0xff, 0x04, 1, flags]);
+  if (port && port.isOpen) {
+    port.write(packet, (err) => {
+      if (err) console.log("Settings write error:", err.message);
+    });
+  }
+}
+
+function setDeviceSettings(partial) {
+  if (!partial || Object.keys(partial).length === 0) return;
+  deviceSettings = { fahrenheit: false, invert: false, ...deviceSettings, ...partial };
+  sendSettings();
+}
+
 function sendBootstrapPackets() {
+  sendSettings();
   // Ensure ESP32 receives deterministic media init on every connect/reconnect.
   // Do not send placeholder weather here; wait for real Open-Meteo data in updateWeather().
   sendMusic("", "");
@@ -644,4 +670,5 @@ module.exports = {
   stopWindowsBridge,
   startStateUpdateLoop,
   requestFirmwareVersion,
+  setDeviceSettings,
 };

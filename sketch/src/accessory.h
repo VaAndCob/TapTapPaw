@@ -29,9 +29,15 @@ extern uint8_t rotation;
 extern bool dim; // back light dim flag
 extern uint8_t dim_brightness;
 extern uint8_t brightness;
+extern bool invert_flip; // flips the board's default color inversion
+extern bool use_fahrenheit; // temperature unit
 //-----------------------------
 
+void save_display_prefs(); // persist invert_flip + use_fahrenheit (no beep)
 
+// physical keys (MX switches on CN1/P3)
+void keys_init();
+bool keys_pressed(); // true once per new key press (debounced)
 
 void initSpeaker();
 

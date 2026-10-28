@@ -190,6 +190,57 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
   }
 }
 
+// ---- Weather label (supports C/F) ----
+static int8_t last_temp_c = 0; // signed: below 0 C is sent as two's complement
+static uint8_t last_humidity = 0;
+static char last_time_str[6] = "--:--"; // weather OBSERVATION time (HH:MM), shown on the 3rd line
+static bool have_weather = false;
+
+static void update_forecast_label() {
+  char buf[40];
+  if (!have_weather) {
+    snprintf(buf, sizeof(buf), "--%s\n--%%\n--:--", use_fahrenheit ? "°F" : "°C");
+  } else {
+    int t = last_temp_c;
+    if (use_fahrenheit) {
+      t = (int)lroundf(last_temp_c * 9.0f / 5.0f + 32.0f);
+    }
+    snprintf(buf, sizeof(buf), "%d%s\n%u%%\n%s", t, use_fahrenheit ? "°F" : "°C", (unsigned)last_humidity, last_time_str);
+  }
+  lv_label_set_text(ui_main_Label_forecast, buf);
+}
+
+// Tap the weather panel on the main screen to toggle C/F (saved on the device)
+static void weather_tap_cb(lv_event_t *e) {
+  use_fahrenheit = !use_fahrenheit;
+  update_forecast_label();
+  save_display_prefs();
+  clickSound();
+}
+
+// ---- Paw tap animation + click, used by both the PC app (serial) and the physical keys ----
+static void paw_tap(bool flush_serial) {
+  // paw up
+  lv_obj_clear_flag(ui_main_Image_rightpawup, LV_OBJ_FLAG_HIDDEN);
+  lv_obj_add_flag(ui_main_Image_rightpawdown, LV_OBJ_FLAG_HIDDEN);
+  if (!flush_serial) {
+    lv_task_handler(); // draw the "up" frame before the delay (serial path redraws while flushing)
+  }
+  vTaskDelay(100);
+  clickSound();
+  if (flush_serial) {
+    // clear serial buffer to avoid click sound backlog
+    while (Serial.available() > 0) {
+      Serial.read();
+      lv_task_handler(); // ensure UI updates immediately on key event
+    }
+  }
+  // paw down
+  lv_obj_clear_flag(ui_main_Image_rightpawdown, LV_OBJ_FLAG_HIDDEN);
+  lv_obj_add_flag(ui_main_Image_rightpawup, LV_OBJ_FLAG_HIDDEN);
+  last_sleep_check = millis(); // reset sleepy timer on key event
+}
+
 //---- Serial packet format for system status:
 // Status: [0xFF] [0x01] [len] [evt] [cpu] [mem] [batt] [chg] [hr] [min] [sec] [media]
 // Music:  [0xFF] [0x02] [len] [title_len] [title...] [artist_len] [artist...]
@@ -236,6 +287,8 @@ void serial_parse(byte b) {
     } else if (packet[1] == 0x03) { // Weather Packet
       // Total length = data_length (packet[2]) + 3 header bytes
       packetLength = packet[2] + 3;
+    } else if (packet[1] == 0x04) { // Settings Packet
+      packetLength = packet[2] + 3;
     }
 
     // Sanity check the calculated length. If invalid, reset the parser.
@@ -272,23 +325,7 @@ void serial_parse(byte b) {
 
       // keyboard tapping animation
       if (keyDown) {
-
-        // keyboard up
-        lv_obj_clear_flag(ui_main_Image_rightpawup, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(ui_main_Image_rightpawdown, LV_OBJ_FLAG_HIDDEN);
-        vTaskDelay(100); // delay mouse click animation
-        clickSound();
-        // clear seral buffer to avoid click sound backlog
-        while (Serial.available() > 0) {
-          Serial.read();
-          lv_task_handler(); // ensure UI updates immediately on key event
-        }
-
-        // keyboard down
-        lv_obj_clear_flag(ui_main_Image_rightpawdown, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(ui_main_Image_rightpawup, LV_OBJ_FLAG_HIDDEN);
-
-        last_sleep_check = millis(); // reset sleepy timer on key event
+        paw_tap(true);
       }
 
       /*
@@ -348,9 +385,9 @@ void serial_parse(byte b) {
 
       // packet  type is 0x03 (weather)
     } else if (packet[1] == 0x03) {
-      uint8_t weather_group = packet[3]; // weather_group (0-4)
-      String temp_c = String(packet[4]);
-      String humidity = String(packet[5]);
+      uint8_t weather_group = packet[3]; // weather_group (0-5)
+      last_temp_c = (int8_t)packet[4]; // signed, so sub-zero temperatures display correctly
+      last_humidity = packet[5];
 
       char time_str[6]; // HH:MM + null
       snprintf(time_str, sizeof(time_str), "%02d:%02d", packet[6], packet[7]);
@@ -366,8 +403,29 @@ void serial_parse(byte b) {
         playAudio(climate_sounds[weather_group]);
       }
 
-      String weather_info = temp_c + "°C\n" + humidity + "%\n" + time_str;
-      lv_label_set_text(ui_main_Label_forecast, weather_info.c_str());
+      strlcpy(last_time_str, time_str, sizeof(last_time_str));
+      have_weather = true;
+      update_forecast_label();
+
+      // Settings packet: [0xFF][0x04][len=1][flags] bit0 = Fahrenheit, bit1 = flip color inversion
+    } else if (packet[1] == 0x04) {
+      bool want_fahr = (packet[3] & 0x01) != 0;
+      bool want_invert = (packet[3] & 0x02) != 0;
+      bool changed = false;
+      if (want_invert != invert_flip) {
+        invert_flip = want_invert;
+        tft.invertDisplay(invert_flip);
+        lv_obj_invalidate(lv_scr_act());
+        changed = true;
+      }
+      if (want_fahr != use_fahrenheit) {
+        use_fahrenheit = want_fahr;
+        update_forecast_label();
+        changed = true;
+      }
+      if (changed) {
+        save_display_prefs();
+      }
 
     } // else packet  type is 0x02 (music), which is handled above
     // Reset packet index for next frame
@@ -416,15 +474,15 @@ void setup() {
   // screen calibration for resistive touch
   uint16_t calData[8];
   pref.begin("touch", false);
-  if (digitalRead(BUTTON_PIN) == LOW) {
+  bool have_cal = (pref.getBytes("calData", calData, sizeof(calData)) == sizeof(calData));
+  // Calibrate when BOOT is held at power-up, or when no calibration has ever been saved (first run).
+  if (digitalRead(BUTTON_PIN) == LOW || !have_cal) {
     tft.calibrateTouch(calData, TFT_WHITE, TFT_BLACK, 15);
     pref.putBytes("calData", calData, sizeof(calData));
     log_i("Touch calibration saved.");
   } else {
-    if (pref.getBytes("calData", calData, sizeof(calData)) == sizeof(calData)) {
-      tft.setTouchCalibrate(calData);
-      log_i("Touch calibration loaded.");
-    }
+    tft.setTouchCalibrate(calData);
+    log_i("Touch calibration loaded.");
   }
   pref.end();
 #endif
@@ -470,6 +528,14 @@ void setup() {
 
   // load config
   load_config();
+  lv_obj_set_width(ui_main_Label_forecast, LV_SIZE_CONTENT); // room for "104°F"
+  update_forecast_label();
+  lv_obj_add_flag(ui_main_Panel_weather, LV_OBJ_FLAG_CLICKABLE);
+  lv_obj_add_flag(ui_main_Label_forecast, LV_OBJ_FLAG_EVENT_BUBBLE); // taps on the text/icon reach the panel
+  lv_obj_add_flag(ui_main_Image_weatherIcon, LV_OBJ_FLAG_EVENT_BUBBLE);
+  lv_obj_add_event_cb(ui_main_Panel_weather, weather_tap_cb, LV_EVENT_CLICKED, NULL);
+
+  keys_init(); // physical MX keys on CN1/P3
   
   //test sound effect
   /*
@@ -499,6 +565,10 @@ void loop() {
   if (Serial.available()) {
     b = Serial.read();
     serial_parse(b);
+  }
+
+  if (keys_pressed()) { // physical key: same paw tap + click as a PC keystroke
+    paw_tap(false);
   }
 
   //---- Update Animation every 1 second
